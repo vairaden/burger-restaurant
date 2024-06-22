@@ -1,0 +1,8 @@
+.ingredientsList {
+  height: 756px;
+  overflow-y: auto;
+}
+
+.ingredientsListItem {
+  position: relative;
+}
