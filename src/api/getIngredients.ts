@@ -1,3 +1,5 @@
+import {API_URL} from "../constants";
+
 export interface Ingredient {
   _id: string;
   name: string;
@@ -14,7 +16,7 @@ export interface Ingredient {
 }
 
 export const getIngredients = async (): Promise<Ingredient[]> => {
-  const res = await fetch('https://norma.nomoreparties.space/api/ingredients');
+  const res = await fetch(`${API_URL}/api/ingredients`);
   const {data, success} = await res.json();
 
   if (!success) {

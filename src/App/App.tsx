@@ -18,17 +18,20 @@ export function App() {
   useEffect(() => {
     getIngredients().then((res) => {
       setIngredients(res);
+    }).catch((err) => {
+      console.error(err);
     })
+
   }, []);
 
   return (
       <AppContext.Provider value={{ingredients}}>
         <div className="App">
           <AppHeader/>
-          <div className={styles.mainGrid}>
+          <main className={styles.mainGrid}>
             <BurgerIngredients/>
             <BurgerConstructor/>
-          </div>
+          </main>
         </div>
       </AppContext.Provider>
   );

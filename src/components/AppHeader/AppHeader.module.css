@@ -1,0 +1,42 @@
+.header {
+  background-color: var(--modal-bg);
+}
+
+.nav {
+  margin: auto;
+  width: 1280px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.logoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.navButton {
+  display: flex;
+  height: fit-content;
+  width: fit-content;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.buttonGroupStart {
+  display: flex;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 8px;
+}
+
+.buttonGroupEnd {
+  display: flex;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}

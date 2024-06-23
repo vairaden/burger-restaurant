@@ -1,4 +1,17 @@
 .ingredientList {
   height: 656px;
   overflow-y: auto;
+  width: fit-content;
+  margin: auto;
+}
+
+.listItemContent {
+  display: flex;
+  align-items: center;
+}
+
+.checkoutBlockWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
 }
