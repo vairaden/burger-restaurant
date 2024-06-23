@@ -1,4 +1,5 @@
 .ingredientList {
+  list-style: none;
   height: 656px;
   overflow-y: auto;
   width: fit-content;

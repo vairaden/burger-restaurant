@@ -17,10 +17,15 @@ export interface Ingredient {
 
 export const getIngredients = async (): Promise<Ingredient[]> => {
   const res = await fetch(`${API_URL}/api/ingredients`);
+
+  if (!res.ok) {
+    throw new Error('Request failed');
+  }
+
   const {data, success} = await res.json();
 
   if (!success) {
-    throw new Error('Request failed');
+    throw new Error('No data');
   }
 
   return data;
