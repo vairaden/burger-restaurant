@@ -1,0 +1,32 @@
+.ingredientsSection {
+  height: 756px;
+  overflow-y: auto;
+}
+
+.ingredientsListItem {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.ingredientsList {
+  margin: 24px 16px 0 16px;
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px 24px;
+}
+
+.ingredientImage {
+  width: 100%;
+  padding: 0 16px;
+}
+
+.ingredientPrice {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px 0;
+}
