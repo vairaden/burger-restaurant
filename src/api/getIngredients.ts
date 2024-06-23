@@ -19,7 +19,7 @@ export const getIngredients = async (): Promise<Ingredient[]> => {
   const res = await fetch(`${API_URL}/api/ingredients`);
 
   if (!res.ok) {
-    throw new Error('Request failed');
+    throw new Error(`Request failed with status ${res.status}`);
   }
 
   const {data, success} = await res.json();
