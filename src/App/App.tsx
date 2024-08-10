@@ -1,39 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {AppHeader} from "../components/AppHeader";
-import {BurgerConstructor} from "../components/BurgerConstructor";
-import {BurgerIngredients} from "../components/BurgerIngredients";
+import { useEffect } from 'react';
+import { AppHeader } from '../components/AppHeader';
+import { BurgerConstructor } from '../components/BurgerConstructor';
+import { BurgerIngredients } from '../components/BurgerIngredients';
 
 import styles from './App.module.css';
-import {getIngredients, Ingredient} from "../api/getIngredients";
+import { fetchIngredientsList } from '../services/ingredientsSlice';
+import { useAppDispatch } from '../services/store';
 
-export interface AppContextType {
-  ingredients: Ingredient[];
-}
-
-export const AppContext = React.createContext<AppContextType>({ingredients: []});
-
-export function App() {
-  const [ingredients, setIngredients] = useState<Ingredient[]>([]);
+export const App = () => {
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    getIngredients().then((res) => {
-      setIngredients(res);
-    }).catch((err) => {
-      console.error(err);
-    })
-
+    dispatch(fetchIngredientsList());
   }, []);
 
   return (
-      <AppContext.Provider value={{ingredients}}>
-        <div className="App">
-          <AppHeader/>
-          <main className={styles.mainGrid}>
-            <BurgerIngredients/>
-            <BurgerConstructor/>
-          </main>
-        </div>
-      </AppContext.Provider>
+    <div className="App">
+      <AppHeader />
+      <main className={styles.mainGrid}>
+        <BurgerIngredients />
+        <BurgerConstructor />
+      </main>
+    </div>
   );
 }
-

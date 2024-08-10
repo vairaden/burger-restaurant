@@ -6,6 +6,10 @@
   margin: auto;
 }
 
+.ingredientListHovered {
+  border: 1px solid lime;
+}
+
 .listItemContent {
   display: flex;
   align-items: center;
