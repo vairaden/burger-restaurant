@@ -1,0 +1,9 @@
+.listItemContent {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid transparent;
+}
+
+.listItemHovered {
+  border-top-color: lime;
+}

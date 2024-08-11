@@ -1,17 +1,20 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import type { PayloadAction } from "@reduxjs/toolkit";
-import {getIngredients, Ingredient} from "../api/getIngredients";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { getIngredients } from '../api/getIngredients';
+import { Ingredient, IngredientListItem } from '../types';
 
 export interface IngredientsState {
-  ingredients: Ingredient[];
+  ingredients: IngredientListItem[];
+  selectedBunId: string | null;
 }
 
 const initialState: IngredientsState = {
   ingredients: [],
+  selectedBunId: null,
 };
 
 export const fetchIngredientsList = createAsyncThunk(
-  "ingredients/fetchIngredientsList",
+  'ingredients/fetchIngredientsList',
   async () => {
     const ingredients = await getIngredients();
     return ingredients;
@@ -19,21 +22,57 @@ export const fetchIngredientsList = createAsyncThunk(
 );
 
 export const ingredientsSlice = createSlice({
-  name: "ingredients",
+  name: 'ingredients',
   initialState,
   reducers: {
+    increaseIngredientNumber: (
+      state,
+      { payload }: PayloadAction<{ item: Ingredient }>
+    ) => {
+      if (payload.item.type === 'bun') {
+        if (state.selectedBunId) {
+          state.ingredients[
+            state.ingredients.findIndex(
+              (item) => item._id === state.selectedBunId
+            )
+          ].numberInConstructor = 0;
+        }
+        state.selectedBunId = payload.item._id;
+
+        state.ingredients[
+          state.ingredients.findIndex((item) => item._id === payload.item._id)
+        ].numberInConstructor = 2;
+      } else {
+        state.ingredients[
+          state.ingredients.findIndex((item) => item._id === payload.item._id)
+        ].numberInConstructor++;
+      }
+    },
+    decreaseIngredientNumber: (
+      state,
+      { payload }: PayloadAction<{ item: Ingredient }>
+    ) => {
+      if (payload.item.type !== 'bun') {
+        state.ingredients[
+          state.ingredients.findIndex((item) => item._id === payload.item._id)
+        ].numberInConstructor--;
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredientsList.pending, (state, action) => {})
       .addCase(fetchIngredientsList.fulfilled, (state, action) => {
-        return {ingredients: action.payload}
+        state.ingredients = action.payload.map((item) => ({
+          ...item,
+          numberInConstructor: 0,
+        }));
       })
       .addCase(fetchIngredientsList.rejected, (state, action) => {});
   },
 });
 
-export const { } =
+export const { increaseIngredientNumber, decreaseIngredientNumber } =
   ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;

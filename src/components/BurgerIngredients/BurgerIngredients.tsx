@@ -1,16 +1,13 @@
-import {
-  Counter,
-  CurrencyIcon,
-  Tab,
-} from '@ya.praktikum/react-developer-burger-ui-components';
-import { useState } from 'react';
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useEffect, useState } from 'react';
 
 import styles from './BurgerIngredients.module.css';
-import { Ingredient } from '../../api/getIngredients';
 import { IngredientDetails } from '../IngredientDetails';
 import { Modal } from '../Modal';
-import { useAppSelector } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 import { IngredientCard } from '../IngredientCard';
+import { fetchIngredientsList } from '../../services/ingredientsSlice';
+import { Ingredient } from '../../types';
 
 export const BurgerIngredients = () => {
   const [activeTab, setActiveTab] = useState('bun');
@@ -18,6 +15,12 @@ export const BurgerIngredients = () => {
     useState<Ingredient | null>(null);
 
   const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchIngredientsList());
+  }, []);
 
   return (
     <>
