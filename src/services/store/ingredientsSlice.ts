@@ -7,12 +7,16 @@ export interface IngredientsState {
   ingredients: IngredientListItem[];
   selectedBunId: string | null;
   selectedIngredient: Ingredient | null;
+  loading: boolean;
+  error: boolean;
 }
 
 const initialState: IngredientsState = {
   ingredients: [],
   selectedBunId: null,
   selectedIngredient: null,
+  loading: false,
+  error: false,
 };
 
 export const fetchIngredientsList = createAsyncThunk(
@@ -69,14 +73,21 @@ export const ingredientsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchIngredientsList.pending, (state, action) => {})
+      .addCase(fetchIngredientsList.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(fetchIngredientsList.fulfilled, (state, action) => {
         state.ingredients = action.payload.map((item) => ({
           ...item,
           numberInConstructor: 0,
         }));
+
+        state.loading = false;
       })
-      .addCase(fetchIngredientsList.rejected, (state, action) => {});
+      .addCase(fetchIngredientsList.rejected, (state) => {
+        state = initialState;
+        state.error = true;
+      });
   },
 });
 

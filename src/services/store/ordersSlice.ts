@@ -5,10 +5,14 @@ import { OrderInfo } from '../../types';
 
 export interface OrdersState {
   selectedOrder: OrderInfo | null;
+  loading: boolean;
+  error: boolean;
 }
 
 const initialState: OrdersState = {
   selectedOrder: null,
+  loading: false,
+  error: false,
 };
 
 export const createOrder = createAsyncThunk<
@@ -29,11 +33,17 @@ export const ordersSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createOrder.pending, () => {})
+      .addCase(createOrder.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.selectedOrder = action.payload;
+        state.loading = false;
       })
-      .addCase(createOrder.rejected, () => {});
+      .addCase(createOrder.rejected, (state) => {
+        state = initialState;
+        state.error = true;
+      });
   },
 });
 
