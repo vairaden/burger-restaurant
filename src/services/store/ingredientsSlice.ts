@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { getIngredients } from '../api/getIngredients';
-import { Ingredient, IngredientListItem } from '../types';
+import { getIngredients } from '../../api/getIngredients';
+import { Ingredient, IngredientListItem } from '../../types';
 
 export interface IngredientsState {
   ingredients: IngredientListItem[];
@@ -62,10 +62,10 @@ export const ingredientsSlice = createSlice({
     },
     setSelectedIngredient: (
       state,
-      {payload}: PayloadAction<{item: Ingredient | null}>
+      { payload }: PayloadAction<{ item: Ingredient | null }>
     ) => {
       state.selectedIngredient = payload.item;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -80,7 +80,10 @@ export const ingredientsSlice = createSlice({
   },
 });
 
-export const { increaseIngredientNumber, decreaseIngredientNumber, setSelectedIngredient } =
-  ingredientsSlice.actions;
+export const {
+  increaseIngredientNumber,
+  decreaseIngredientNumber,
+  setSelectedIngredient,
+} = ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;

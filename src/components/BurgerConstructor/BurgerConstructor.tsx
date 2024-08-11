@@ -7,20 +7,23 @@ import { useMemo } from 'react';
 import styles from './BurgerConstructor.module.css';
 import { Modal } from '../Modal';
 import { OrderDetails } from '../OrderDetails';
-import { useAppDispatch, useAppSelector } from '../../services/store';
 import { useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import {
   addIngredient,
   deleteIngredient,
-} from '../../services/constructorSlice';
+} from '../../services/store/constructorSlice';
 import { Ingredient } from '../../types';
 import {
   decreaseIngredientNumber,
   increaseIngredientNumber,
-} from '../../services/ingredientsSlice';
-import { clearSelectedOrder, createOrder } from '../../services/ordersSlice';
+} from '../../services/store/ingredientsSlice';
+import {
+  clearSelectedOrder,
+  createOrder,
+} from '../../services/store/ordersSlice';
 import ConstructorListItem from '../ConstructorListItem/ConstructorListItem';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 
 interface DropParams {
   item: Ingredient;

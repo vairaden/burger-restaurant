@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { Ingredient } from '../types';
+import { Ingredient } from '../../types';
 
 export interface ConstructorState {
   bun: Ingredient | null;

@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './BurgerIngredients.module.css';
 import { IngredientDetails } from '../IngredientDetails';
 import { Modal } from '../Modal';
-import { useAppDispatch, useAppSelector } from '../../services/store';
 import { IngredientCard } from '../IngredientCard';
 import {
   fetchIngredientsList,
   setSelectedIngredient,
-} from '../../services/ingredientsSlice';
+} from '../../services/store/ingredientsSlice';
 import { Ingredient } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../services/store';
 
 const enum IngredientTabs {
   BUN = 'bun',

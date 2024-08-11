@@ -8,7 +8,7 @@ import { Ingredient } from '../../types';
 import clsx from 'clsx';
 import { useDrag, useDrop } from 'react-dnd';
 import { useAppDispatch } from '../../services/store';
-import { moveIngredient } from '../../services/constructorSlice';
+import { moveIngredient } from '../../services/store/constructorSlice';
 
 interface Props {
   item: Ingredient;

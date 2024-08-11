@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { OrderInfo } from '../types';
-import { createOrderRequest } from '../api/createOrderRequest';
+import { createOrderRequest } from '../../api/createOrderRequest';
+import { OrderInfo } from '../../types';
 
 export interface OrdersState {
   selectedOrder: OrderInfo | null;
