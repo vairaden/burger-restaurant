@@ -12,10 +12,9 @@ interface Props {
 }
 
 export const IngredientCard = ({ item, setSelectedIngredient }: Props) => {
-  const [{}, dragRef] = useDrag({
+  const [_, dragRef] = useDrag({
     type: 'ingredient',
     item: { item },
-    collect: (monitor) => ({}),
   });
 
   return (

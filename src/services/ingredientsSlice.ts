@@ -6,11 +6,13 @@ import { Ingredient, IngredientListItem } from '../types';
 export interface IngredientsState {
   ingredients: IngredientListItem[];
   selectedBunId: string | null;
+  selectedIngredient: Ingredient | null;
 }
 
 const initialState: IngredientsState = {
   ingredients: [],
   selectedBunId: null,
+  selectedIngredient: null,
 };
 
 export const fetchIngredientsList = createAsyncThunk(
@@ -58,6 +60,12 @@ export const ingredientsSlice = createSlice({
         ].numberInConstructor--;
       }
     },
+    setSelectedIngredient: (
+      state,
+      {payload}: PayloadAction<{item: Ingredient | null}>
+    ) => {
+      state.selectedIngredient = payload.item;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -72,7 +80,7 @@ export const ingredientsSlice = createSlice({
   },
 });
 
-export const { increaseIngredientNumber, decreaseIngredientNumber } =
+export const { increaseIngredientNumber, decreaseIngredientNumber, setSelectedIngredient } =
   ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;
