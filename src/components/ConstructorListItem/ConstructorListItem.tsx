@@ -8,18 +8,21 @@ import { Ingredient } from '../../types';
 import clsx from 'clsx';
 import { useDrag, useDrop } from 'react-dnd';
 import { useAppDispatch } from '../../services/store';
-import { moveIngredient } from '../../services/store/constructorSlice';
+import {
+  moveIngredient,
+  moveIngredientToBottom,
+} from '../../services/store/constructorSlice';
 
 interface Props {
   item: Ingredient;
   type?: 'top' | 'bottom';
   onDelete?: () => void;
   locked?: boolean;
-  constructorListIndex: number;
+  constructorListId?: string;
 }
 
 interface DropParams {
-  itemIndex: number;
+  itemId: string;
 }
 
 const ConstructorListItem = ({
@@ -27,21 +30,34 @@ const ConstructorListItem = ({
   type,
   onDelete,
   locked,
-  constructorListIndex,
+  constructorListId,
 }: Props) => {
   const dispatch = useAppDispatch();
+
   const dropHandler = (params: DropParams) => {
+    if (type === 'bottom') {
+      return dispatch(
+        moveIngredientToBottom({
+          itemId: params.itemId,
+        })
+      );
+    }
+
+    if (!constructorListId) {
+      return;
+    }
+
     dispatch(
       moveIngredient({
-        itemIndex: params.itemIndex,
-        targetIndex: constructorListIndex,
+        itemId: params.itemId,
+        targetId: constructorListId,
       })
     );
   };
 
   const [{ isDragging }, dragRef, dragPreviewRef] = useDrag({
     type: 'constructorItem',
-    item: { itemIndex: constructorListIndex },
+    item: { itemId: constructorListId },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),

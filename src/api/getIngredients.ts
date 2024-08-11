@@ -1,17 +1,11 @@
-import { API_URL } from '../constants';
 import { Ingredient } from '../types';
+import request from '../utils/request';
 
 export const getIngredients = async (): Promise<Ingredient[]> => {
-  const res = await fetch(`${API_URL}/ingredients`);
-
-  if (!res.ok) {
-    throw new Error(`Request failed with status ${res.status}`);
-  }
-
-  const { data, success } = await res.json();
+  const { data, success }  = await request<{data: Ingredient[]}>('/ingredients');
 
   if (!success) {
-    throw new Error('No data');
+    throw new Error('No ingredient data');
   }
 
   return data;

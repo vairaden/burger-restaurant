@@ -13,7 +13,7 @@ import {
   addIngredient,
   deleteIngredient,
 } from '../../services/store/constructorSlice';
-import { Ingredient } from '../../types';
+import { ConstructorIngredient, Ingredient } from '../../types';
 import {
   decreaseIngredientNumber,
   increaseIngredientNumber,
@@ -42,8 +42,8 @@ export const BurgerConstructor = () => {
     dispatch(increaseIngredientNumber({ item }));
   };
 
-  const deleteItem = (item: Ingredient, index: number) => {
-    dispatch(deleteIngredient({ index }));
+  const deleteItem = (item: ConstructorIngredient) => {
+    dispatch(deleteIngredient({ item }));
     dispatch(decreaseIngredientNumber({ item }));
   };
 
@@ -99,25 +99,23 @@ export const BurgerConstructor = () => {
         >
           {bun && (
             <ConstructorListItem
-              constructorListIndex={-1}
               locked
               item={bun}
               type="top"
             />
           )}
 
-          {ingredientsInBurger.map((item, index) => (
+          {ingredientsInBurger.map((item) => (
             <ConstructorListItem
-              constructorListIndex={index}
-              key={index}
-              onDelete={() => deleteItem(item, index)}
+              constructorListId={item.constructorId}
+              key={item.constructorId}
+              onDelete={() => deleteItem(item)}
               item={item}
             />
           ))}
 
           {bun && (
             <ConstructorListItem
-              constructorListIndex={ingredientsInBurger.length}
               locked
               item={bun}
               type="bottom"

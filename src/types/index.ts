@@ -17,6 +17,10 @@ export interface IngredientListItem extends Ingredient {
   numberInConstructor: number;
 }
 
+export interface ConstructorIngredient extends Ingredient {
+  constructorId: string;
+}
+
 export interface OrderInfo {
   name: string;
   order: {

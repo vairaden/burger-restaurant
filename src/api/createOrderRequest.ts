@@ -1,25 +1,19 @@
-import { API_URL } from '../constants';
 import { OrderInfo } from '../types';
+import request from '../utils/request';
 
 export const createOrderRequest = async (
   ingredients: string[]
 ): Promise<OrderInfo> => {
-  const res = await fetch(`${API_URL}/orders`, {
+  const { name, order, success } = await request<OrderInfo>('/orders',  {
     method: 'POST',
     body: JSON.stringify({ ingredients }),
     headers: {
       'Content-Type': 'application/json',
-    },
+    }
   });
 
-  if (!res.ok) {
-    throw new Error(`Request failed with status ${res.status}`);
-  }
-
-  const { name, order, success } = await res.json();
-
   if (!success) {
-    throw new Error('No data');
+    throw new Error('Could not create order');
   }
 
   return { name, order };

@@ -70,6 +70,12 @@ export const ingredientsSlice = createSlice({
     ) => {
       state.selectedIngredient = payload.item;
     },
+    clearIngredients: (state) => {
+      for (const item of state.ingredients) {
+        item.numberInConstructor = 0;
+      }
+      state.selectedBunId = null;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -95,6 +101,7 @@ export const {
   increaseIngredientNumber,
   decreaseIngredientNumber,
   setSelectedIngredient,
+  clearIngredients,
 } = ingredientsSlice.actions;
 
 export default ingredientsSlice.reducer;
