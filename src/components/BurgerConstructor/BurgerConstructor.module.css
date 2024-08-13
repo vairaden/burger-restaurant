@@ -2,13 +2,14 @@
   list-style: none;
   height: 656px;
   overflow-y: auto;
-  width: fit-content;
+  width: 100%;
   margin: auto;
+  border: 1px solid transparent;
+  border-radius: 40px;
 }
 
-.listItemContent {
-  display: flex;
-  align-items: center;
+.ingredientListHovered {
+  border-color: lime;
 }
 
 .checkoutBlockWrapper {

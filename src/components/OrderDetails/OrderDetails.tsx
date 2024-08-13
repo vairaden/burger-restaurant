@@ -1,25 +1,30 @@
-import {CheckMarkIcon} from "@ya.praktikum/react-developer-burger-ui-components";
+import { CheckMarkIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './OrderDetails.module.css';
+import { OrderInfo } from '../../types';
 
-export const OrderDetails = () => {
-  return (
-      <div className={styles.wrapper}>
-        <p className="text text_type_digits-large pt-30">034536</p>
-        <p className="text text_type_main-medium mt-8">
-          идентификатор заказа
-        </p>
-
-        <div className="mt-15">
-          <CheckMarkIcon type="primary"/>
-        </div>
-
-        <p className="text text_type_main-small mt-15">
-          Ваш заказ начали готовить
-        </p>
-        <p className="text text_type_main-default text_color_inactive mt-2 mb-30">
-          Дождитесь готовности на орбитальной станции
-        </p>
-      </div>
-  );
+interface Props {
+  orderInfo: OrderInfo;
 }
+
+export const OrderDetails = ({ orderInfo }: Props) => {
+  return (
+    <div className={styles.wrapper}>
+      <p className="text text_type_digits-large pt-30">
+        {orderInfo.order.number}
+      </p>
+      <p className="text text_type_main-medium mt-8">идентификатор заказа</p>
+
+      <div className="mt-15">
+        <CheckMarkIcon type="primary" />
+      </div>
+
+      <p className="text text_type_main-small mt-15">
+        Ваш заказ начали готовить
+      </p>
+      <p className="text text_type_main-default text_color_inactive mt-2 mb-30">
+        Дождитесь готовности на орбитальной станции
+      </p>
+    </div>
+  );
+};

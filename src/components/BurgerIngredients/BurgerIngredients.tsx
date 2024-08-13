@@ -1,121 +1,168 @@
-import {Counter, CurrencyIcon, Tab} from "@ya.praktikum/react-developer-burger-ui-components";
-import {useContext, useState} from "react";
+import { Tab } from '@ya.praktikum/react-developer-burger-ui-components';
+import { useEffect, useRef, useState } from 'react';
 
-import styles from "./BurgerIngredients.module.css";
-import {AppContext} from "../../App";
-import {Ingredient} from "../../api/getIngredients";
-import {IngredientDetails} from "../IngredientDetails";
-import {Modal} from "../Modal";
+import styles from './BurgerIngredients.module.css';
+import { IngredientDetails } from '../IngredientDetails';
+import { Modal } from '../Modal';
+import { IngredientCard } from '../IngredientCard';
+import {
+  fetchIngredientsList,
+  setSelectedIngredient,
+} from '../../services/store/ingredientsSlice';
+import { Ingredient } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../services/store';
+
+const enum IngredientTabs {
+  BUN = 'bun',
+  SAUCE = 'sauce',
+  MAIN = 'main',
+}
 
 export const BurgerIngredients = () => {
-  const [activeTab, setActiveTab] = useState('bun');
-  const {ingredients} = useContext(AppContext);
-  const [selectedIngredient, setSelectedIngredient] = useState<Ingredient | null>(null);
+  const [activeTab, setActiveTab] = useState(IngredientTabs.BUN);
+
+  const bunTabRef = useRef<HTMLParagraphElement>(null);
+  const sauceTabRef = useRef<HTMLParagraphElement>(null);
+  const mainTabRef = useRef<HTMLParagraphElement>(null);
+  const listContainerRef = useRef<HTMLDivElement>(null);
+
+  const { ingredients, selectedIngredient } = useAppSelector(
+    (state) => state.ingredientsSlice
+  );
+
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchIngredientsList());
+  }, []);
+
+  useEffect(() => {
+    const bunTabElement = bunTabRef.current as HTMLParagraphElement;
+    const sauceTabElement = sauceTabRef.current as HTMLParagraphElement;
+    const mainTabElement = mainTabRef.current as HTMLParagraphElement;
+    const listContainerElement = listContainerRef.current as HTMLDivElement;
+
+    const onScroll = () => {
+      const bunTabTop = bunTabElement.getBoundingClientRect().top;
+      const sauceTabTop = sauceTabElement.getBoundingClientRect().top;
+      const mainTabTop = mainTabElement.getBoundingClientRect().top;
+      const listContainerTop = listContainerElement.getBoundingClientRect().top;
+
+      setActiveTab(
+        [
+          {
+            tab: IngredientTabs.BUN,
+            distance: bunTabTop - listContainerTop,
+          },
+          {
+            tab: IngredientTabs.SAUCE,
+            distance: sauceTabTop - listContainerTop,
+          },
+          {
+            tab: IngredientTabs.MAIN,
+            distance: mainTabTop - listContainerTop,
+          },
+        ].sort((a, b) => Math.abs(a.distance) - Math.abs(b.distance))[0].tab
+      );
+    };
+
+    listContainerElement.addEventListener('scroll', onScroll);
+
+    return () => {
+      listContainerElement.removeEventListener('scroll', onScroll);
+    };
+  }, []);
 
   return (
-      <>
-        <Modal
-            open={!!selectedIngredient}
-            onClose={() => setSelectedIngredient(null)}
-        >
-          {selectedIngredient && (
-              <IngredientDetails
-                  ingredient={selectedIngredient}
-              />
-          )}
-        </Modal>
+    <>
+      <Modal
+        open={!!selectedIngredient}
+        onClose={() => dispatch(setSelectedIngredient({ item: null }))}
+      >
+        {selectedIngredient && (
+          <IngredientDetails ingredient={selectedIngredient} />
+        )}
+      </Modal>
 
-        <section>
-          <p className="text text_type_main-large mt-10">Cоберите бургер</p>
-          <div className="mt-5" style={{display: "flex"}}>
-            <Tab value="bun" active={activeTab === 'bun'} onClick={setActiveTab}>
-              <p className="text text_type_main-small">Булки</p>
-            </Tab>
-            <Tab value="sauce" active={activeTab === 'sauce'} onClick={setActiveTab}>
-              <p className="text text_type_main-small">Соусы</p>
-            </Tab>
-            <Tab value="main" active={activeTab === 'main'} onClick={setActiveTab}>
-              <p className="text text_type_main-small">Начинки</p>
-            </Tab>
-          </div>
+      <section>
+        <p className="text text_type_main-large mt-10">Cоберите бургер</p>
+        <div className="mt-5" style={{ display: 'flex' }}>
+          <Tab
+            value="bun"
+            active={activeTab === 'bun'}
+            onClick={() => setActiveTab(IngredientTabs.BUN)}
+          >
+            <p className="text text_type_main-small">Булки</p>
+          </Tab>
+          <Tab
+            value="sauce"
+            active={activeTab === 'sauce'}
+            onClick={() => setActiveTab(IngredientTabs.SAUCE)}
+          >
+            <p className="text text_type_main-small">Соусы</p>
+          </Tab>
+          <Tab
+            value="main"
+            active={activeTab === 'main'}
+            onClick={() => setActiveTab(IngredientTabs.MAIN)}
+          >
+            <p className="text text_type_main-small">Начинки</p>
+          </Tab>
+        </div>
 
-          <div className={styles.ingredientsSection}>
-            <p className="text text_type_main-medium mt-10">
-              Булки
-            </p>
-            <ul className={styles.ingredientsList}>
-              {ingredients.filter((item) => item.type === 'bun').map((item, index) => (
-                  <li className={styles.ingredientsListItem} key={item._id}
-                      onClick={() => setSelectedIngredient(item)}>
-                    <Counter count={233} size="default"/>
-                    <div>
-                      <img src={item.image_large} alt={item.name} className={styles.ingredientImage}/>
-                      <div className={styles.ingredientPrice}>
-                        <p className="text text_type_main-small mr-2">
-                          {item.price}
-                        </p>
-                        <CurrencyIcon type="primary"/>
-                      </div>
-                      <p className="text text_type_main-small mb-6">
-                        {item.name}
-                      </p>
-                    </div>
-                  </li>
-              ))
-              }
-            </ul>
+        <div className={styles.ingredientsSection} ref={listContainerRef}>
+          <p className="text text_type_main-medium mt-10" ref={bunTabRef}>
+            Булки
+          </p>
+          <ul className={styles.ingredientsList}>
+            {ingredients
+              .filter((item) => item.type === 'bun')
+              .map((item) => (
+                <IngredientCard
+                  item={item}
+                  setSelectedIngredient={(item: Ingredient) =>
+                    dispatch(setSelectedIngredient({ item }))
+                  }
+                  key={item._id}
+                />
+              ))}
+          </ul>
 
-            <p className="text text_type_main-medium mt-10">
-              Соусы
-            </p>
-            <ul className={styles.ingredientsList}>
-              {ingredients.filter((item) => item.type === 'sauce').map((item, index) => (
-                  <li className={styles.ingredientsListItem} key={item._id}
-                      onClick={() => setSelectedIngredient(item)}>
-                    <Counter count={233} size="default"/>
-                    <div>
-                      <img src={item.image_large} alt={item.name} className={styles.ingredientImage}/>
-                      <div className={styles.ingredientPrice}>
-                        <p className="text text_type_main-small mr-2">
-                          {item.price}
-                        </p>
-                        <CurrencyIcon type="primary"/>
-                      </div>
-                      <p className="text text_type_main-small mb-6">
-                        {item.name}
-                      </p>
-                    </div>
-                  </li>
-              ))
-              }
-            </ul>
+          <p className="text text_type_main-medium mt-10" ref={sauceTabRef}>
+            Соусы
+          </p>
+          <ul className={styles.ingredientsList}>
+            {ingredients
+              .filter((item) => item.type === 'sauce')
+              .map((item) => (
+                <IngredientCard
+                  item={item}
+                  setSelectedIngredient={(item: Ingredient) =>
+                    dispatch(setSelectedIngredient({ item }))
+                  }
+                  key={item._id}
+                />
+              ))}
+          </ul>
 
-            <p className="text text_type_main-medium mt-10">
-              Начинки
-            </p>
-            <ul className={styles.ingredientsList}>
-              {ingredients.filter((item) => item.type === 'main').map((item, index) => (
-                  <li className={styles.ingredientsListItem} key={item._id}
-                      onClick={() => setSelectedIngredient(item)}>
-                    <Counter count={233} size="default"/>
-                    <div>
-                      <img src={item.image_large} alt={item.name} className={styles.ingredientImage}/>
-                      <div className={styles.ingredientPrice}>
-                        <p className="text text_type_main-small mr-2">
-                          {item.price}
-                        </p>
-                        <CurrencyIcon type="primary"/>
-                      </div>
-                      <p className="text text_type_main-small mb-6">
-                        {item.name}
-                      </p>
-                    </div>
-                  </li>
-              ))
-              }
-            </ul>
-          </div>
-        </section>
-      </>
-  )
-}
+          <p className="text text_type_main-medium mt-10" ref={mainTabRef}>
+            Начинки
+          </p>
+          <ul className={styles.ingredientsList}>
+            {ingredients
+              .filter((item) => item.type === 'main')
+              .map((item, index) => (
+                <IngredientCard
+                  item={item}
+                  setSelectedIngredient={(item: Ingredient) =>
+                    dispatch(setSelectedIngredient({ item }))
+                  }
+                  key={item._id}
+                />
+              ))}
+          </ul>
+        </div>
+      </section>
+    </>
+  );
+};

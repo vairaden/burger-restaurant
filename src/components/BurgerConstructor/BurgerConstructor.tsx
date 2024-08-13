@@ -1,89 +1,143 @@
-import {Button, ConstructorElement, CurrencyIcon, DragIcon} from "@ya.praktikum/react-developer-burger-ui-components";
-import {useContext, useMemo, useState} from "react";
-import {AppContext} from "../../App";
+import {
+  Button,
+  CurrencyIcon,
+} from '@ya.praktikum/react-developer-burger-ui-components';
+import { useMemo } from 'react';
 
 import styles from './BurgerConstructor.module.css';
-import {Modal} from "../Modal";
-import {OrderDetails} from "../OrderDetails";
+import { Modal } from '../Modal';
+import { OrderDetails } from '../OrderDetails';
+import { useDrop } from 'react-dnd';
+import clsx from 'clsx';
+import {
+  addIngredient,
+  deleteIngredient,
+} from '../../services/store/constructorSlice';
+import { ConstructorIngredient, Ingredient } from '../../types';
+import {
+  decreaseIngredientNumber,
+  increaseIngredientNumber,
+} from '../../services/store/ingredientsSlice';
+import {
+  clearSelectedOrder,
+  createOrder,
+} from '../../services/store/ordersSlice';
+import ConstructorListItem from '../ConstructorListItem/ConstructorListItem';
+import { useAppDispatch, useAppSelector } from '../../services/store';
+
+interface DropParams {
+  item: Ingredient;
+}
 
 export const BurgerConstructor = () => {
-  const {ingredients} = useContext(AppContext);
-  const [openOrderDetails, setOpenOrderDetails] = useState(false);
+  const dispatch = useAppDispatch();
+  const { ingredientsInBurger, bun } = useAppSelector(
+    (state) => state.constructorSlice
+  );
 
-  const {firstIngredient, otherIngredients, lastIngredient} = useMemo(() => {
-    return {
-      firstIngredient: ingredients[0],
-      lastIngredient: ingredients[0],
-      otherIngredients: ingredients.slice(1, ingredients.length),
+  const { selectedOrder } = useAppSelector((state) => state.ordersSlice);
+
+  const onDropHandler = ({ item }: DropParams) => {
+    dispatch(addIngredient({ item }));
+    dispatch(increaseIngredientNumber({ item }));
+  };
+
+  const deleteItem = (item: ConstructorIngredient) => {
+    dispatch(deleteIngredient({ item }));
+    dispatch(decreaseIngredientNumber({ item }));
+  };
+
+  const [{ isHover }, dropRef] = useDrop({
+    accept: 'ingredient',
+    drop(params: DropParams) {
+      onDropHandler(params);
+    },
+    collect: (monitor) => ({
+      isHover: monitor.isOver(),
+    }),
+  });
+
+  const totalPrice = useMemo(() => {
+    return (
+      (bun?.price || 0) * 2 +
+      ingredientsInBurger.reduce((acc, item) => acc + item.price, 0)
+    );
+  }, [bun, ingredientsInBurger]);
+
+  const onCreateOrder = () => {
+    if (bun) {
+      dispatch(
+        createOrder({
+          ingredientIds: [
+            ...ingredientsInBurger.map((item) => item._id),
+            bun._id,
+            bun._id,
+          ],
+        })
+      );
     }
-  }, [ingredients]);
+  };
+
+  const onCloseOrderModal = () => {
+    dispatch(clearSelectedOrder());
+  };
 
   return (
-      <>
-        <Modal
-            open={openOrderDetails}
-            onClose={() => setOpenOrderDetails(false)}
-        >
-          <OrderDetails/>
+    <>
+      {selectedOrder && (
+        <Modal open={!!selectedOrder} onClose={onCloseOrderModal}>
+          <OrderDetails orderInfo={selectedOrder} />
         </Modal>
+      )}
 
-        <section className="mt-25">
-          <ul className={styles.ingredientList}>
-            {firstIngredient && (
-                <li className={styles.listItemContent}>
-                  <ConstructorElement
-                      extraClass="ml-8"
-                      key={firstIngredient._id}
-                      type="top"
-                      isLocked={true}
-                      text={firstIngredient.name + ' (верх)'}
-                      price={firstIngredient.price}
-                      thumbnail={firstIngredient.image}
-                  />
-                </li>
-            )}
+      <section className="mt-25">
+        <ul
+          className={clsx(styles.ingredientList, {
+            [styles.ingredientListHovered]: isHover,
+          })}
+          ref={dropRef}
+        >
+          {bun && (
+            <ConstructorListItem
+              locked
+              item={bun}
+              type="top"
+            />
+          )}
 
-            {otherIngredients.map((item, index) => (
-                <li className={'mt-4 ' + styles.listItemContent}>
-                  <DragIcon type="primary"/>
-                  <ConstructorElement
-                      extraClass="ml-2"
-                      key={item._id}
-                      text={item.name}
-                      price={item.price}
-                      thumbnail={item.image}
-                  />
-                </li>
-            ))
-            }
+          {ingredientsInBurger.map((item) => (
+            <ConstructorListItem
+              constructorListId={item.constructorId}
+              key={item.constructorId}
+              onDelete={() => deleteItem(item)}
+              item={item}
+            />
+          ))}
 
-            {lastIngredient && (
-                <li className={'mt-4 ' + styles.listItemContent}>
-                  <ConstructorElement
-                      extraClass="ml-8"
-                      key={lastIngredient._id}
-                      type="bottom"
-                      isLocked={true}
-                      text={lastIngredient.name + ' (низ)'}
-                      price={lastIngredient.price}
-                      thumbnail={lastIngredient.image}
-                  />
-                </li>
-            )}
-          </ul>
+          {bun && (
+            <ConstructorListItem
+              locked
+              item={bun}
+              type="bottom"
+            />
+          )}
+        </ul>
 
-          <div className={styles.checkoutBlockWrapper + ' mr-4 mt-10'}>
-            <div className={styles.checkoutBlockWrapper + ' mr-10'}>
-              <p className="text text_type_main-large mr-4">
-                610
-              </p>
-              <CurrencyIcon type="primary"/>
-            </div>
-            <Button htmlType="button" type="primary" size="medium" onClick={() => setOpenOrderDetails(true)}>
-              Оформить заказ
-            </Button>
+        <div className={clsx(styles.checkoutBlockWrapper, 'mr-4 mt-10')}>
+          <div className={clsx(styles.checkoutBlockWrapper, 'mr-10')}>
+            <p className="text text_type_main-large mr-4">{totalPrice}</p>
+            <CurrencyIcon type="primary" />
           </div>
-        </section>
-      </>
-  )
-}
+          <Button
+            htmlType="button"
+            type="primary"
+            size="medium"
+            onClick={onCreateOrder}
+          >
+            Оформить заказ
+          </Button>
+        </div>
+      </section>
+    </>
+  );
+};
