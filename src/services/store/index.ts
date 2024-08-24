@@ -3,12 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import ingredientsSlice from './ingredientsSlice';
 import constructorSlice from './constructorSlice';
 import ordersSlice from './ordersSlice';
+import authSlice from './authSlice';
 
 export const store = configureStore({
   reducer: {
     ingredientsSlice,
     constructorSlice,
     ordersSlice,
+    authSlice
   },
 });
 

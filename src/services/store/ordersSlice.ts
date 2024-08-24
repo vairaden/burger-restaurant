@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { createOrderRequest } from '../../api/createOrderRequest';
 import { OrderInfo } from '../../types';
 import { clearIngredients } from './ingredientsSlice';
 import { clearConstructor } from './constructorSlice';
+import { createOrderRequest } from '../../api/orderApi';
 
 export interface OrdersState {
   selectedOrder: OrderInfo | null;
@@ -21,7 +20,7 @@ export const createOrder = createAsyncThunk<
   OrderInfo,
   { ingredientIds: string[] }
 >('orders/createOrder', async ({ ingredientIds }, thunkAPI) => {
-  const order = await createOrderRequest(ingredientIds);
+  const order = await createOrderRequest({ingredients: ingredientIds});
 
   thunkAPI.dispatch(clearIngredients())
   thunkAPI.dispatch(clearConstructor());

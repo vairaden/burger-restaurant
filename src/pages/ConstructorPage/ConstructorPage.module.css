@@ -1,0 +1,8 @@
+.mainGrid {
+    display: grid;
+    grid-template-columns: 600px 600px;
+    margin: auto;
+    width: fit-content;
+    height: 912px;
+    gap: 40px;
+  }
