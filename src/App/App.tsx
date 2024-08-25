@@ -8,8 +8,17 @@ import LoginPage from '../pages/LoginPage/LoginPage';
 import IngredientPage from '../pages/IngredientPage/IngredientPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
+import { useAppDispatch } from '../services/store';
+import { fetchIngredientsList } from '../services/store/ingredientsSlice';
+import { useEffect } from 'react';
 
 export const App = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchIngredientsList());
+  }, []);
+
   return (
     <div className="App">
       <BrowserRouter>

@@ -4,24 +4,30 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './IngredientCard.module.css';
 import { useDrag } from 'react-dnd';
-import { Ingredient, IngredientListItem } from '../../types';
+import { IngredientListItem } from '../../types';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   item: IngredientListItem;
-  setSelectedIngredient: (item: Ingredient) => void;
 }
 
-export const IngredientCard = ({ item, setSelectedIngredient }: Props) => {
+export const IngredientCard = ({ item }: Props) => {
+  const navigate = useNavigate();
+
   const [_, dragRef] = useDrag({
     type: 'ingredient',
     item: { item },
   });
 
+  const openIngredientDetails = () => {
+    navigate(`/ingredients/${item._id}`);
+  }
+
   return (
     <li
       ref={dragRef}
       className={styles.ingredientCard}
-      onClick={() => setSelectedIngredient(item)}
+      onClick={openIngredientDetails}
     >
       {!!item.numberInConstructor && (
         <Counter count={item.numberInConstructor} size="default" />

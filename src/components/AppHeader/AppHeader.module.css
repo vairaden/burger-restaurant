@@ -1,4 +1,6 @@
 .header {
+  position: sticky;
+  z-index: 9999;
   background-color: var(--modal-bg);
 }
 

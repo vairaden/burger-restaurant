@@ -1,7 +1,29 @@
-import withProtection from "../../utils/withProtection";
+import { useParams } from 'react-router-dom';
+import { IngredientDetails } from '../../components/IngredientDetails';
+import { useAppSelector } from '../../services/store';
+import withProtection from '../../utils/withProtection';
+import { useMemo } from 'react';
+
+import pageStyles from '../../styles/PageStyles.module.css';
 
 const IngredientPage = () => {
-  return <div>IngredientPage</div>;
+  const { id } = useParams();
+
+  const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
+
+  const selectedIngredient = useMemo(() => {
+    return ingredients.find((item) => item._id === id);
+  }, [id, ingredients]);
+
+  return (
+    <main>
+      <div className={pageStyles.wrapper}>
+        {selectedIngredient && (
+          <IngredientDetails ingredient={selectedIngredient} />
+        )}
+      </div>
+    </main>
+  );
 };
 
 export default withProtection(IngredientPage);
