@@ -11,6 +11,7 @@ import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import { useAppDispatch } from '../services/store';
 import { fetchIngredientsList } from '../services/store/ingredientsSlice';
 import { useEffect } from 'react';
+import ProtectedRouteElement from '../components/ProtectedRouteElement/ProtectedRouteElement';
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -24,12 +25,50 @@ export const App = () => {
       <BrowserRouter>
         <AppHeader />
         <Routes>
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+          {/* protected from authorized users*/}
+          <Route
+            path="/forgot-password"
+            element={
+              <ProtectedRouteElement protectFromAuthorized>
+                <ForgotPasswordPage />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <ProtectedRouteElement protectFromAuthorized>
+                <ResetPasswordPage />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <ProtectedRouteElement protectFromAuthorized>
+                <LoginPage />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <ProtectedRouteElement protectFromAuthorized>
+                <RegisterPage />
+              </ProtectedRouteElement>
+            }
+          />
+          {/* protected */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRouteElement>
+                <ProfilePage />
+              </ProtectedRouteElement>
+            }
+          />
+          {/* unprotected */}
           <Route path="/" element={<ConstructorPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/ingredients/:id" element={<IngredientPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>

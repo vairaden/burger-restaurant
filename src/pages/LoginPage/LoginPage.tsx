@@ -3,17 +3,21 @@ import {
   EmailInput,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { ChangeEvent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import pageStyles from '../../styles/PageStyles.module.css';
 import clsx from 'clsx';
+import { useAppDispatch } from '../../services/store';
+import { login } from '../../services/store/authSlice';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -22,6 +26,22 @@ const LoginPage = () => {
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      dispatch(
+        login({
+          email,
+          password,
+        })
+      ).unwrap();
+
+      navigate(searchParams.get('from_path') || '/');
+    } catch (err) {}
+  };
+
   return (
     <main>
       <div className={pageStyles.wrapper}>
@@ -33,7 +53,7 @@ const LoginPage = () => {
         >
           Вход
         </p>
-        <form className={pageStyles.centerContent}>
+        <form className={pageStyles.centerContent} onSubmit={handleSubmit}>
           <EmailInput
             onChange={onEmailChange}
             value={email}
@@ -49,7 +69,7 @@ const LoginPage = () => {
             extraClass="mb-6"
           />
           <Button
-            htmlType="button"
+            htmlType="submit"
             type="primary"
             size="medium"
             extraClass="mb-20"

@@ -1,7 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { IngredientDetails } from '../../components/IngredientDetails';
 import { useAppSelector } from '../../services/store';
-import withProtection from '../../utils/withProtection';
 import { useMemo } from 'react';
 
 import pageStyles from '../../styles/PageStyles.module.css';
@@ -26,4 +25,4 @@ const IngredientPage = () => {
   );
 };
 
-export default withProtection(IngredientPage);
+export default IngredientPage;

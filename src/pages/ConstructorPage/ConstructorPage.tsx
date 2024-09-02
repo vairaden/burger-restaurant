@@ -1,6 +1,5 @@
 import { BurgerConstructor } from '../../components/BurgerConstructor';
 import { BurgerIngredients } from '../../components/BurgerIngredients';
-import withProtection from '../../utils/withProtection';
 
 import styles from './ConstructorPage.module.css';
 
@@ -13,4 +12,4 @@ const ConstructorPage = () => {
   );
 };
 
-export default withProtection(ConstructorPage);
+export default ConstructorPage;

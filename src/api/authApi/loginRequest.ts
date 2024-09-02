@@ -6,7 +6,7 @@ export interface LoginRequestOpts {
 }
 
 export interface LoginRequestRes {
-  accessToken: boolean;
+  accessToken: string;
   refreshToken: string;
   user: {
     email: string;
@@ -14,9 +14,7 @@ export interface LoginRequestRes {
   };
 }
 
-export const loginRequest = async (
-  opts: LoginRequestOpts
-): Promise<LoginRequestRes> => {
+export const loginRequest = async (opts: LoginRequestOpts) => {
   const res = await request<LoginRequestRes>('/auth/login', {
     method: 'POST',
     body: JSON.stringify(opts),

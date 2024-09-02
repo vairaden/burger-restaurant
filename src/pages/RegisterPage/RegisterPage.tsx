@@ -6,9 +6,11 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import pageStyles from '../../styles/PageStyles.module.css';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { useAppDispatch } from '../../services/store';
+import { register } from '../../services/store/authSlice';
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -16,6 +18,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -28,6 +31,25 @@ const RegisterPage = () => {
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
+  const onRegister = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      await dispatch(
+        register({
+          email,
+          name,
+          password,
+        })
+      ).unwrap();
+
+      navigate('/');
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <main>
       <div className={pageStyles.wrapper}>
@@ -39,7 +61,7 @@ const RegisterPage = () => {
         >
           Регистрация
         </p>
-        <form className={pageStyles.centerContent}>
+        <form className={pageStyles.centerContent} onSubmit={onRegister}>
           {/* @ts-expect-error: missing props */}
           <Input
             type={'text'}
@@ -65,7 +87,7 @@ const RegisterPage = () => {
             extraClass="mb-6"
           />
           <Button
-            htmlType="button"
+            htmlType="submit"
             type="primary"
             size="medium"
             extraClass="mb-20"

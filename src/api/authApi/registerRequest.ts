@@ -15,9 +15,7 @@ export interface RegisterRequestRes {
   refreshToken: string;
 }
 
-export const registerRequest = async (
-  opts: RegisterRequestOpts
-): Promise<RegisterRequestRes> => {
+export const registerRequest = async (opts: RegisterRequestOpts) => {
   const res = await request<RegisterRequestRes>('/auth/register', {
     method: 'POST',
     body: JSON.stringify(opts),

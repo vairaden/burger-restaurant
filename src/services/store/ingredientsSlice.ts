@@ -80,6 +80,7 @@ export const ingredientsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchIngredientsList.pending, (state) => {
+        state.error = false;
         state.loading = true;
       })
       .addCase(fetchIngredientsList.fulfilled, (state, action) => {
