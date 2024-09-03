@@ -12,22 +12,24 @@ export const resetPassword = createAsyncThunk<
   ResetPasswordRequestRes,
   ResetPasswordRequestOpts
 >('password/resetPassword', async (opts) => {
-  return resetPasswordRequest(opts);
+  return await resetPasswordRequest(opts);
 });
 
 export const sendResetEmail = createAsyncThunk<
   SendResetEmailRequestRes,
   SendResetEmailRequestOpts
 >('password/sendResetEmail', async (opts) => {
-  return sendResetEmailRequest(opts);
+  return await sendResetEmailRequest(opts);
 });
 
-export interface AuthState {
+export interface PasswordState {
+  emailCodeSent: boolean;
   loading: boolean;
   error: boolean;
 }
 
-const initialState: AuthState = {
+const initialState: PasswordState = {
+  emailCodeSent: false,
   loading: false,
   error: false,
 };
@@ -44,23 +46,22 @@ export const passwordSlice = createSlice({
       })
       .addCase(resetPassword.fulfilled, (state) => {
         state.loading = false;
-
       })
       .addCase(resetPassword.rejected, (state) => {
         state.loading = false;
-
       })
       .addCase(sendResetEmail.pending, (state) => {
         state.error = false;
+
+        state.emailCodeSent = true;
+
         state.loading = true;
       })
       .addCase(sendResetEmail.fulfilled, (state) => {
         state.loading = false;
-
       })
       .addCase(sendResetEmail.rejected, (state) => {
         state.loading = false;
-
       });
   },
 });

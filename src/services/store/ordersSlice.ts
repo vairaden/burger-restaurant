@@ -46,9 +46,11 @@ export const ordersSlice = createSlice({
         state.selectedOrder = action.payload;
         state.loading = false;
       })
-      .addCase(createOrder.rejected, (state) => {
-        state = initialState;
-        state.error = true;
+      .addCase(createOrder.rejected, () => {
+        return {
+          ...initialState,
+          error: true,
+        };
       });
   },
 });

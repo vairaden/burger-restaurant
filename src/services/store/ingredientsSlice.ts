@@ -91,9 +91,11 @@ export const ingredientsSlice = createSlice({
 
         state.loading = false;
       })
-      .addCase(fetchIngredientsList.rejected, (state) => {
-        state = initialState;
-        state.error = true;
+      .addCase(fetchIngredientsList.rejected, () => {
+        return {
+          ...initialState,
+          error: true,
+        };
       });
   },
 });

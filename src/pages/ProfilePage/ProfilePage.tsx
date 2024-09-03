@@ -9,11 +9,17 @@ import pageStyles from '../../styles/PageStyles.module.css';
 import styles from './ProfilePage.module.css';
 
 import clsx from 'clsx';
+import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../services/store';
+import { logout } from '../../services/store/authSlice';
 
 const ProfilePage = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -26,6 +32,13 @@ const ProfilePage = () => {
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+
+    navigate('/');
+  };
+
   return (
     <main>
       <div className={styles.wrapper}>
@@ -50,6 +63,7 @@ const ProfilePage = () => {
               'text text_type_main-medium mb-6',
               'text_color_inactive'
             )}
+            onClick={handleLogout}
           >
             Выход
           </p>

@@ -5,23 +5,38 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import pageStyles from '../../styles/PageStyles.module.css';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { useAppSelector } from '../../services/store';
 
 const ResetPasswordPage = () => {
-  const [name, setName] = useState('');
+  const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
+  const emailCodeSent = useAppSelector(
+    (store) => store.passwordSlice.emailCodeSent
+  );
 
   const onCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
+    setCode(e.target.value);
   };
 
   const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
+
+  useEffect(() => {
+    if (!emailCodeSent) {
+      navigate('/forgot-password');
+    }
+  }, []);
+
+  if (!emailCodeSent) {
+    return null;
+  }
+
   return (
     <main>
       <div className={pageStyles.wrapper}>
@@ -34,7 +49,7 @@ const ResetPasswordPage = () => {
           Восстановление пароля
         </p>
         <form className={pageStyles.centerContent}>
-        <PasswordInput
+          <PasswordInput
             onChange={onPasswordChange}
             value={password}
             name={'password'}
@@ -46,8 +61,8 @@ const ResetPasswordPage = () => {
             type={'text'}
             placeholder="Введите код из письма"
             onChange={onCodeChange}
-            value={name}
-            name={'name'}
+            value={code}
+            name={'code'}
             size={'default'}
             extraClass="mb-6"
           />

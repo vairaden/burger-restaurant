@@ -4,7 +4,6 @@ import {
   LoginRequestOpts,
   LoginRequestRes,
   logoutRequest,
-  LogoutRequestOpts,
   LogoutRequestRes,
   refreshTokenRequest,
   RefreshTokenRequestOpts,
@@ -13,33 +12,43 @@ import {
   RegisterRequestOpts,
   RegisterRequestRes,
 } from '../../api/authApi';
+import { RootState } from '.';
 
 export const register = createAsyncThunk<
   RegisterRequestRes,
   RegisterRequestOpts
 >('auth/register', async (opts) => {
-  return registerRequest(opts);
+  return await registerRequest(opts);
 });
 
 export const login = createAsyncThunk<LoginRequestRes, LoginRequestOpts>(
   'auth/login',
   async (opts) => {
-    return loginRequest(opts);
+    return await loginRequest(opts);
   }
 );
 
-export const logout = createAsyncThunk<LogoutRequestRes, LogoutRequestOpts>(
-  'auth/logout',
-  async (opts) => {
-    return logoutRequest(opts);
+export const logout = createAsyncThunk<
+  LogoutRequestRes,
+  undefined,
+  { state: RootState }
+>('auth/logout', async (_, thunkApi) => {
+  const token = localStorage.getItem('refreshToken');
+  if (!token) {
+    return thunkApi.fulfillWithValue({
+      success: true,
+      message: 'Reset without refresh token',
+    });
   }
-);
+
+  return await logoutRequest({ token });
+});
 
 export const refreshAccessToken = createAsyncThunk<
   RefreshTokenRequestRes,
   RefreshTokenRequestOpts
 >('auth/refreshAccessToken', async (opts) => {
-  return refreshTokenRequest(opts);
+  return await refreshTokenRequest(opts);
 });
 
 export interface AuthState {
@@ -101,11 +110,9 @@ export const authSlice = createSlice({
         state.error = false;
         state.loading = true;
       })
-      .addCase(logout.fulfilled, (state) => {
-        state.loading = false;
-
-        state = initialState;
+      .addCase(logout.fulfilled, () => {
         localStorage.removeItem('refreshToken');
+        return initialState;
       })
       .addCase(logout.rejected, (state) => {
         state.loading = false;

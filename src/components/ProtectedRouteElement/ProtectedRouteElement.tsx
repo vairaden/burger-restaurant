@@ -1,6 +1,10 @@
-import { Navigate, useLocation } from 'react-router-dom';
+import {
+  createSearchParams,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { useAppSelector } from '../../services/store';
-import { ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -10,17 +14,27 @@ interface Props {
 const ProtectedRouteElement = ({ children, protectFromAuthorized }: Props) => {
   const user = useAppSelector((state) => state.authSlice.user);
   const location = useLocation();
+  const navigate = useNavigate();
+  const [canDisplay, setCanDisplay] = useState(false);
 
-  if (!user) {
-    return <Navigate to={`/login?from_url=${location.pathname}`} replace />;
-  }
+  useEffect(() => {
+    if (!user  && !protectFromAuthorized && location.pathname !== '/login') {
+      navigate({
+        pathname: '/login',
+        search: createSearchParams({
+          from_path: location.pathname,
+        }).toString(),
+      });
+    }
 
-  if (protectFromAuthorized) {
-    return <Navigate to="/" replace />;
+    if (user && protectFromAuthorized) {
+      navigate('/', { replace: true });
+    }
 
-  }
+    setCanDisplay(true);
+  }, []);
 
-  return <>{children}</>;
+  return canDisplay ? <>{children}</> : null;
 };
 
 export default ProtectedRouteElement;

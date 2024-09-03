@@ -3,6 +3,7 @@ import request from '../../utils/request';
 export interface LogoutRequestOpts {
   token: string;
 }
+
 export interface LogoutRequestRes {
   message: string;
 }

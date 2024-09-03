@@ -27,11 +27,11 @@ const LoginPage = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      dispatch(
+      await dispatch(
         login({
           email,
           password,
@@ -39,7 +39,9 @@ const LoginPage = () => {
       ).unwrap();
 
       navigate(searchParams.get('from_path') || '/');
-    } catch (err) {}
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   return (

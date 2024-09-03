@@ -7,19 +7,32 @@ import pageStyles from '../../styles/PageStyles.module.css';
 import { ChangeEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { useAppDispatch } from '../../services/store';
+import { sendResetEmail } from '../../services/store/passwordSlice';
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState('');
 
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
   };
 
-  const onSubmit = () => {
-    navigate('/reset-password');
-  }
+  const onSubmit = async () => {
+    try {
+      await dispatch(
+        sendResetEmail({
+          email,
+        })
+      ).unwrap();
+
+      navigate('/reset-password');
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   return (
     <main>
