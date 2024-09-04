@@ -1,18 +1,23 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
+  fetchUserRequest,
+  FetchUserRequestRes,
   loginRequest,
   LoginRequestOpts,
   LoginRequestRes,
   logoutRequest,
   LogoutRequestRes,
   refreshTokenRequest,
-  RefreshTokenRequestOpts,
   RefreshTokenRequestRes,
   registerRequest,
   RegisterRequestOpts,
   RegisterRequestRes,
+  updateUserRequest,
+  UpdateUserRequestOpts,
+  UpdateUserRequestRes,
 } from '../../api/authApi';
 import { RootState } from '.';
+import { User } from '../../types';
 
 export const register = createAsyncThunk<
   RegisterRequestRes,
@@ -44,19 +49,30 @@ export const logout = createAsyncThunk<
   return await logoutRequest({ token });
 });
 
-export const refreshAccessToken = createAsyncThunk<
-  RefreshTokenRequestRes,
-  RefreshTokenRequestOpts
->('auth/refreshAccessToken', async (opts) => {
-  return await refreshTokenRequest(opts);
+export const refreshAccessToken = createAsyncThunk<RefreshTokenRequestRes>(
+  'auth/refreshAccessToken',
+  async () => {
+    return await refreshTokenRequest();
+  }
+);
+
+export const fetchUser = createAsyncThunk<FetchUserRequestRes>(
+  'auth/fetchUser',
+  async () => {
+    return await fetchUserRequest();
+  }
+);
+
+export const updateUser = createAsyncThunk<
+  UpdateUserRequestRes,
+  UpdateUserRequestOpts
+>('auth/updateUser', async (opts) => {
+  return await updateUserRequest(opts);
 });
 
 export interface AuthState {
   accessToken: string;
-  user: null | {
-    email: string;
-    name: string;
-  };
+  user: null | User;
   loading: boolean;
   error: boolean;
 }
@@ -95,19 +111,21 @@ export const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(login.fulfilled, (state, action) => {
-        state.loading = false;
-
         state.user = action.payload.user;
         state.accessToken = action.payload.accessToken;
 
         localStorage.setItem('refreshToken', action.payload.refreshToken);
+
+        state.loading = false;
       })
       .addCase(login.rejected, (state) => {
-        state.loading = false;
         state.error = true;
+
+        state.loading = false;
       })
       .addCase(logout.pending, (state) => {
         state.error = false;
+
         state.loading = true;
       })
       .addCase(logout.fulfilled, () => {
@@ -115,23 +133,56 @@ export const authSlice = createSlice({
         return initialState;
       })
       .addCase(logout.rejected, (state) => {
-        state.loading = false;
         state.error = true;
+
+        state.loading = false;
       })
       .addCase(refreshAccessToken.pending, (state) => {
         state.error = false;
+
         state.loading = true;
       })
       .addCase(refreshAccessToken.fulfilled, (state, action) => {
-        state.loading = false;
-
         state.accessToken = action.payload.accessToken;
 
         localStorage.setItem('refreshToken', action.payload.refreshToken);
+
+        state.loading = false;
       })
       .addCase(refreshAccessToken.rejected, (state) => {
-        state.loading = false;
         state.error = true;
+
+        state.loading = false;
+      })
+      .addCase(fetchUser.pending, (state) => {
+        state.error = false;
+
+        state.loading = true;
+      })
+      .addCase(fetchUser.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+
+        state.loading = false;
+      })
+      .addCase(fetchUser.rejected, (state) => {
+        state.error = true;
+
+        state.loading = false;
+      })
+      .addCase(updateUser.pending, (state) => {
+        state.error = false;
+
+        state.loading = true;
+      })
+      .addCase(updateUser.fulfilled, (state, action) => {
+        state.user = action.payload.user;
+
+        state.loading = false;
+      })
+      .addCase(updateUser.rejected, (state) => {
+        state.error = true;
+
+        state.loading = false;
       });
   },
 });

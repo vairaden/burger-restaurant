@@ -4,7 +4,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import pageStyles from '../../styles/PageStyles.module.css';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../services/store';
@@ -20,7 +20,9 @@ const ForgotPasswordPage = () => {
     setEmail(e.target.value);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     try {
       await dispatch(
         sendResetEmail({

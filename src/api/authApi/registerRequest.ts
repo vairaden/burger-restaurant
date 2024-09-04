@@ -1,3 +1,4 @@
+import { User } from '../../types';
 import request from '../../utils/request';
 
 export interface RegisterRequestOpts {
@@ -7,10 +8,7 @@ export interface RegisterRequestOpts {
 }
 
 export interface RegisterRequestRes {
-  user: {
-    email: string;
-    name: string;
-  };
+  user: User;
   accessToken: string;
   refreshToken: string;
 }

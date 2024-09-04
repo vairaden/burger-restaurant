@@ -3,7 +3,7 @@ import {
   PasswordInput,
   Input,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
 import pageStyles from '../../styles/PageStyles.module.css';
 import styles from './ProfilePage.module.css';
@@ -11,7 +11,7 @@ import styles from './ProfilePage.module.css';
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../services/store';
-import { logout } from '../../services/store/authSlice';
+import { fetchUser, logout } from '../../services/store/authSlice';
 
 const ProfilePage = () => {
   const [name, setName] = useState('');
@@ -36,8 +36,20 @@ const ProfilePage = () => {
   const handleLogout = async () => {
     await dispatch(logout());
 
-    navigate('/');
+    navigate('/login');
   };
+
+  const fetchUserData = async () => {
+    try {
+      await dispatch(fetchUser()).unwrap();
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserData();
+  }, []);
 
   return (
     <main>

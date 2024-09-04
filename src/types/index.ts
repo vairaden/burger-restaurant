@@ -27,3 +27,10 @@ export interface OrderInfo {
     number: number;
   };
 }
+
+export interface User {
+  user: {
+    email: string;
+    name: string;
+  };
+}

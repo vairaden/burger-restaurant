@@ -105,7 +105,7 @@ const LoginPage = () => {
           >
             Забыли пароль?
             <Button
-              htmlType="submit"
+              htmlType="button"
               type="secondary"
               size="medium"
               onClick={() => navigate('/forgot-password')}

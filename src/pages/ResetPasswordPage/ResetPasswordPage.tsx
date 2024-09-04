@@ -5,15 +5,17 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import pageStyles from '../../styles/PageStyles.module.css';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import { useAppSelector } from '../../services/store';
+import { useAppDispatch, useAppSelector } from '../../services/store';
+import { resetPassword } from '../../services/store/passwordSlice';
 
 const ResetPasswordPage = () => {
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
 
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const emailCodeSent = useAppSelector(
     (store) => store.passwordSlice.emailCodeSent
@@ -27,11 +29,28 @@ const ResetPasswordPage = () => {
     setPassword(e.target.value);
   };
 
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      await dispatch(
+        resetPassword({
+          token: code,
+          password,
+        })
+      ).unwrap();
+
+      navigate('/profile');
+    } catch (err) {
+      console.warn(err);
+    }
+  };
+
   useEffect(() => {
     if (!emailCodeSent) {
       navigate('/forgot-password');
     }
-  }, []);
+  }, [emailCodeSent, navigate]);
 
   if (!emailCodeSent) {
     return null;
@@ -48,7 +67,7 @@ const ResetPasswordPage = () => {
         >
           Восстановление пароля
         </p>
-        <form className={pageStyles.centerContent}>
+        <form className={pageStyles.centerContent} onSubmit={onSubmit}>
           <PasswordInput
             onChange={onPasswordChange}
             value={password}
@@ -68,7 +87,7 @@ const ResetPasswordPage = () => {
           />
 
           <Button
-            htmlType="button"
+            htmlType="submit"
             type="primary"
             size="medium"
             extraClass="mb-20"
@@ -85,7 +104,7 @@ const ResetPasswordPage = () => {
           >
             Вспомнили пароль?
             <Button
-              htmlType="submit"
+              htmlType="button"
               type="secondary"
               size="medium"
               onClick={() => navigate('/login')}

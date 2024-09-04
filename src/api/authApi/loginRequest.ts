@@ -1,3 +1,4 @@
+import { User } from '../../types';
 import request from '../../utils/request';
 
 export interface LoginRequestOpts {
@@ -8,10 +9,7 @@ export interface LoginRequestOpts {
 export interface LoginRequestRes {
   accessToken: string;
   refreshToken: string;
-  user: {
-    email: string;
-    name: string;
-  };
+  user: User;
 }
 
 export const loginRequest = async (opts: LoginRequestOpts) => {

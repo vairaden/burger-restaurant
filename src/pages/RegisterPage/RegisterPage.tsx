@@ -46,7 +46,7 @@ const RegisterPage = () => {
 
       navigate('/');
     } catch (err) {
-      console.log(err);
+      console.warn(err);
     }
   };
 
@@ -104,7 +104,7 @@ const RegisterPage = () => {
           >
             Уже зарегистрированы?
             <Button
-              htmlType="submit"
+              htmlType="button"
               type="secondary"
               size="medium"
               onClick={() => navigate('/login')}

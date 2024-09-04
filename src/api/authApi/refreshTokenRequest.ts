@@ -1,18 +1,13 @@
 import request from '../../utils/request';
 
-export interface RefreshTokenRequestOpts {
-  token: string;
-}
-
 export interface RefreshTokenRequestRes {
   accessToken: string;
   refreshToken: string;
 }
 
-export const refreshTokenRequest = async (opts: RefreshTokenRequestOpts) => {
+export const refreshTokenRequest = async () => {
   const res = await request<RefreshTokenRequestRes>('/auth/token', {
     method: 'POST',
-    body: JSON.stringify(opts),
     headers: {
       'Content-Type': 'application/json',
     },
