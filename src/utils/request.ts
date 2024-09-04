@@ -29,13 +29,16 @@ const request = async <T>(
 ): Promise<T & ApiRequest> => {
   let res = await fetch(API_URL + url, withAuthHeader(opts));
 
-  if (res.status === 401) {
-    await store.dispatch(refreshAccessToken());
-    res = await fetch(API_URL + url, withAuthHeader(opts));
+  if (res.status !== 401) {
+    checkResponse(res);
+    return await res.json();
   }
 
-  checkResponse(res);
+  await store.dispatch(refreshAccessToken());
 
+  res = await fetch(API_URL + url, withAuthHeader(opts));
+
+  checkResponse(res);
   return await res.json();
 };
 

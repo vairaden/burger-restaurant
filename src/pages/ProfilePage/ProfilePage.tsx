@@ -40,11 +40,7 @@ const ProfilePage = () => {
   };
 
   const fetchUserData = async () => {
-    try {
-      await dispatch(fetchUser()).unwrap();
-    } catch (err) {
-      console.warn(err);
-    }
+    await dispatch(fetchUser());
   };
 
   useEffect(() => {

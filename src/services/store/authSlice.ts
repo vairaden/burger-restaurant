@@ -7,8 +7,6 @@ import {
   LoginRequestRes,
   logoutRequest,
   LogoutRequestRes,
-  refreshTokenRequest,
-  RefreshTokenRequestRes,
   registerRequest,
   RegisterRequestOpts,
   RegisterRequestRes,
@@ -18,6 +16,7 @@ import {
 } from '../../api/authApi';
 import { RootState } from '.';
 import { User } from '../../types';
+import { refreshTokenRequest, RefreshTokenRequestRes } from '../../api/authApi/refreshTokenRequest';
 
 export const register = createAsyncThunk<
   RegisterRequestRes,
@@ -51,8 +50,14 @@ export const logout = createAsyncThunk<
 
 export const refreshAccessToken = createAsyncThunk<RefreshTokenRequestRes>(
   'auth/refreshAccessToken',
-  async () => {
-    return await refreshTokenRequest();
+  async (_, thunkApi) => {
+    const token = localStorage.getItem('refreshToken');
+
+    if (!token) {
+      return thunkApi.rejectWithValue({error: 'No refresh token'});
+    }
+
+    return await refreshTokenRequest({token});
   }
 );
 
@@ -149,10 +154,9 @@ export const authSlice = createSlice({
 
         state.loading = false;
       })
-      .addCase(refreshAccessToken.rejected, (state) => {
-        state.error = true;
-
-        state.loading = false;
+      .addCase(refreshAccessToken.rejected, () => {
+        localStorage.removeItem('refreshToken');
+        return initialState;
       })
       .addCase(fetchUser.pending, (state) => {
         state.error = false;

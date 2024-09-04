@@ -35,18 +35,16 @@ const RegisterPage = () => {
   const onRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      await dispatch(
-        register({
-          email,
-          name,
-          password,
-        })
-      ).unwrap();
+    const res = await dispatch(
+      register({
+        email,
+        name,
+        password,
+      })
+    );
 
+    if (res.meta.requestStatus === 'fulfilled') {
       navigate('/');
-    } catch (err) {
-      console.warn(err);
     }
   };
 

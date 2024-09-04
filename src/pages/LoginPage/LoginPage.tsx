@@ -30,17 +30,15 @@ const LoginPage = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      await dispatch(
-        login({
-          email,
-          password,
-        })
-      ).unwrap();
+    const res = await dispatch(
+      login({
+        email,
+        password,
+      })
+    );
 
+    if (res.meta.requestStatus === 'fulfilled') {
       navigate(searchParams.get('from_path') || '/');
-    } catch (err) {
-      console.warn(err);
     }
   };
 

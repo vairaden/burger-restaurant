@@ -32,17 +32,15 @@ const ResetPasswordPage = () => {
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    try {
-      await dispatch(
-        resetPassword({
-          token: code,
-          password,
-        })
-      ).unwrap();
+    const res = await dispatch(
+      resetPassword({
+        token: code,
+        password,
+      })
+    );
 
+    if (res.meta.requestStatus === 'fulfilled') {
       navigate('/profile');
-    } catch (err) {
-      console.warn(err);
     }
   };
 
