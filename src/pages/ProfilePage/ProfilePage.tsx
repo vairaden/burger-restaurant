@@ -2,24 +2,31 @@ import {
   EmailInput,
   PasswordInput,
   Input,
+  Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
 
 import pageStyles from '../../styles/PageStyles.module.css';
 import styles from './ProfilePage.module.css';
 
 import clsx from 'clsx';
-import { useNavigate } from 'react-router-dom';
-import { useAppDispatch } from '../../services/store';
-import { fetchUser, logout } from '../../services/store/authSlice';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { store, useAppDispatch, useAppSelector } from '../../services/store';
+import { fetchUser, logout, updateUser } from '../../services/store/authSlice';
 
 const ProfilePage = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [name, setName] = useState(() => {
+    return store.getState().authSlice.user?.name || '';
+  });
+  const [email, setEmail] = useState(() => {
+    return store.getState().authSlice.user?.email || '';
+  });
   const [password, setPassword] = useState('');
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const user = useAppSelector((state) => state.authSlice.user);
 
   const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -43,6 +50,28 @@ const ProfilePage = () => {
     await dispatch(fetchUser());
   };
 
+  const displayControls = useMemo(() => {
+    return name !== user?.name || email !== user?.email || password !== '';
+  }, [email, name, password, user?.email, user?.name]);
+
+  const onProfileUpdate = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    dispatch(updateUser({
+      email,
+      name,
+      password
+    }))
+  };
+
+  const resetForm = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setName(user?.name || '');
+    setEmail(user?.email || '');
+    setPassword('');
+  };
+
   useEffect(() => {
     fetchUserData();
   }, []);
@@ -51,25 +80,31 @@ const ProfilePage = () => {
     <main>
       <div className={styles.wrapper}>
         <div>
-          <p
-            className={clsx('text text_type_main-medium mb-6', {
-              text_color_inactive: false,
-            })}
+          <NavLink
+            to="/profile"
+            className={({isActive}) => clsx(
+              'text text_type_main-medium mb-6 text_color_inactive',
+              styles.navButton,
+              {
+                [styles.navButtonActive]: isActive
+              }
+            )}
           >
             Профиль
-          </p>
-          <p
+          </NavLink>
+          <NavLink
+            to="/profile/orders"
             className={clsx(
-              'text text_type_main-medium mb-6',
-              'text_color_inactive'
+              'text text_type_main-medium mb-6 text_color_inactive',
+              styles.navButton
             )}
           >
             История заказов
-          </p>
+          </NavLink>
           <p
             className={clsx(
-              'text text_type_main-medium mb-6',
-              'text_color_inactive'
+              'text text_type_main-medium mb-6 text_color_inactive',
+              styles.navButton
             )}
             onClick={handleLogout}
           >
@@ -86,7 +121,11 @@ const ProfilePage = () => {
           </div>
         </div>
         <div>
-          <form className={pageStyles.centerContent}>
+          <form
+            className={pageStyles.centerContent}
+            onSubmit={onProfileUpdate}
+            onReset={resetForm}
+          >
             {/* @ts-expect-error: missing props */}
             <Input
               type={'text'}
@@ -114,6 +153,26 @@ const ProfilePage = () => {
               extraClass="mb-6"
               icon="EditIcon"
             />
+            {displayControls && (
+              <>
+                <Button
+                  htmlType="submit"
+                  type="primary"
+                  size="medium"
+                  extraClass="mb-20"
+                >
+                  Сохранить
+                </Button>
+                <Button
+                  htmlType="reset"
+                  type="secondary"
+                  size="medium"
+                  extraClass="mb-20"
+                >
+                  Отмена
+                </Button>
+              </>
+            )}
           </form>
         </div>
       </div>

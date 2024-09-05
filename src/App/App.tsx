@@ -12,6 +12,7 @@ import { useAppDispatch } from '../services/store';
 import { fetchIngredientsList } from '../services/store/ingredientsSlice';
 import { useEffect } from 'react';
 import ProtectedRouteElement from '../components/ProtectedRouteElement/ProtectedRouteElement';
+import OrdersPage from '../pages/OrdersPage/OrdersPage';
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -64,6 +65,14 @@ export const App = () => {
             element={
               <ProtectedRouteElement>
                 <ProfilePage />
+              </ProtectedRouteElement>
+            }
+          />
+          <Route
+            path="/profile/orders"
+            element={
+              <ProtectedRouteElement>
+                <OrdersPage />
               </ProtectedRouteElement>
             }
           />

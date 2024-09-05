@@ -1,59 +1,78 @@
 import {
   BurgerIcon,
-  Button,
   ListIcon,
   Logo,
   ProfileIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './AppHeader.module.css';
-import { useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import clsx from 'clsx';
+
+const enum headerPaths {
+  HOME = '/',
+  ORDERS = '/orders',
+  PROFILE = '/profile',
+}
 
 export const AppHeader = () => {
-  const navigate = useNavigate();
+  const location = useLocation();
 
   return (
     <header className={styles.header}>
       <nav className={styles.nav}>
         <div className={styles.buttonGroupStart}>
-          <Button
-          onClick={() => navigate('/')}
-            htmlType="button"
-            type="secondary"
-            size="small"
-            extraClass={styles.navButton}
-          >
-            <BurgerIcon type="primary" />
-            <p className="text text_type_main-default ml-2">Конструктор</p>
-          </Button>
-          <Button
-            htmlType="button"
-            type="secondary"
-            size="small"
-            extraClass={styles.navButton}
-          >
-            <ListIcon type="secondary" />
-            <p className="text text_type_main-default text_color_inactive ml-2">
+          <Link to="/" className={styles.navButton}>
+            <BurgerIcon
+              type={
+                location.pathname === headerPaths.HOME ? 'primary' : 'secondary'
+              }
+            />
+            <p
+              className={clsx('text text_type_main-default ml-2', {
+                text_color_inactive: location.pathname !== headerPaths.HOME,
+              })}
+            >
+              Конструктор
+            </p>
+          </Link>
+          <Link to="/orders" className={styles.navButton}>
+            <ListIcon
+              type={
+                location.pathname === headerPaths.ORDERS
+                  ? 'primary'
+                  : 'secondary'
+              }
+            />
+            <p
+              className={clsx('text text_type_main-default ml-2', {
+                text_color_inactive: location.pathname !== headerPaths.ORDERS,
+              })}
+            >
               Лента заказов
             </p>
-          </Button>
+          </Link>
         </div>
         <div className={styles.logoContainer}>
           <Logo />
         </div>
         <div className={styles.buttonGroupEnd}>
-          <Button
-            onClick={() => navigate('/profile')}
-            htmlType="button"
-            type="secondary"
-            size="small"
-            extraClass={styles.navButton}
-          >
-            <ProfileIcon type="secondary" />
-            <p className="text text_type_main-default text_color_inactive ml-2">
+          <Link to="/profile" className={styles.navButton}>
+            <ProfileIcon
+              type={
+                location.pathname === headerPaths.PROFILE
+                  ? 'primary'
+                  : 'secondary'
+              }
+            />
+            <p
+              className={clsx('text text_type_main-default ml-2', {
+                text_color_inactive: location.pathname !== headerPaths.PROFILE,
+              })}
+            >
               Личный кабинет
             </p>
-          </Button>
+          </Link>
         </div>
       </nav>
     </header>

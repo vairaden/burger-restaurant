@@ -29,8 +29,6 @@ export interface OrderInfo {
 }
 
 export interface User {
-  user: {
-    email: string;
-    name: string;
-  };
+  email: string;
+  name: string;
 }

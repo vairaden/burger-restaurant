@@ -1,10 +1,23 @@
 .wrapper {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    margin: auto;
+    margin-top: 120px;
+    width: fit-content;
 
     display: grid;
     grid-template-columns: 320px auto;
     gap: 60px
+}
+
+.navButton {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.navButtonActive {
+    color: #fff;
+}
+
+.navButton:hover {
+    color: #fff;
 }

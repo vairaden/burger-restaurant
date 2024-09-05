@@ -23,6 +23,8 @@
   width: fit-content;
   padding-left: 20px;
   padding-right: 20px;
+  text-decoration: none;
+  color: #fff;
 }
 
 .buttonGroupStart {
