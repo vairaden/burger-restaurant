@@ -33,7 +33,7 @@ const ProtectedRouteElement = ({ children, protectFromAuthorized }: Props) => {
       });
     }
 
-    if (protectFromAuthorized) {
+    if (userData && protectFromAuthorized) {
       navigate('/', { replace: true });
     }
 
