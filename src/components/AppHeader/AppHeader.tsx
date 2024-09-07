@@ -39,14 +39,14 @@ export const AppHeader = () => {
           <Link to="/orders" className={styles.navButton}>
             <ListIcon
               type={
-                location.pathname === headerPaths.ORDERS
+                location.pathname.startsWith(headerPaths.ORDERS)
                   ? 'primary'
                   : 'secondary'
               }
             />
             <p
               className={clsx('text text_type_main-default ml-2', {
-                text_color_inactive: location.pathname !== headerPaths.ORDERS,
+                text_color_inactive: !location.pathname.startsWith(headerPaths.ORDERS),
               })}
             >
               Лента заказов
@@ -60,14 +60,14 @@ export const AppHeader = () => {
           <Link to="/profile" className={styles.navButton}>
             <ProfileIcon
               type={
-                location.pathname === headerPaths.PROFILE
+                location.pathname.startsWith(headerPaths.PROFILE)
                   ? 'primary'
                   : 'secondary'
               }
             />
             <p
               className={clsx('text text_type_main-default ml-2', {
-                text_color_inactive: location.pathname !== headerPaths.PROFILE,
+                text_color_inactive: !location.pathname.startsWith(headerPaths.PROFILE),
               })}
             >
               Личный кабинет

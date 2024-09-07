@@ -54,18 +54,22 @@ const ProfilePage = () => {
     return name !== user?.name || email !== user?.email || password !== '';
   }, [email, name, password, user?.email, user?.name]);
 
+  const resetForm = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setName(user?.name || '');
+    setEmail(user?.email || '');
+    setPassword('');
+  };
+
   const onProfileUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    dispatch(updateUser({
+    await dispatch(updateUser({
       email,
       name,
       password
     }))
-  };
-
-  const resetForm = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
 
     setName(user?.name || '');
     setEmail(user?.email || '');

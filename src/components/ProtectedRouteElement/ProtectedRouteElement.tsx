@@ -17,20 +17,23 @@ const ProtectedRouteElement = ({ children, protectFromAuthorized }: Props) => {
   const [canDisplay, setCanDisplay] = useState(false);
 
   const checkAuth = async (pathname: string, user: User | null) => {
-    if (!user && !protectFromAuthorized && pathname !== '/login') {
-      const res = await dispatch(fetchUser());
-
-      if (res.meta.requestStatus === 'rejected') {
-        navigate({
-          pathname: '/login',
-          search: createSearchParams({
-            from_path: location.pathname,
-          }).toString(),
-        });
-      }
+    let userData = user;
+    if (!userData) {
+      try {
+        userData = (await dispatch(fetchUser()).unwrap()).user;
+      } catch (err) {}
     }
 
-    if (user && protectFromAuthorized) {
+    if (!userData && pathname !== '/login') {
+      navigate({
+        pathname: '/login',
+        search: createSearchParams({
+          from_path: location.pathname,
+        }).toString(),
+      });
+    }
+
+    if (protectFromAuthorized) {
       navigate('/', { replace: true });
     }
 

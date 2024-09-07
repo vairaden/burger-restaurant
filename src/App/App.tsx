@@ -67,18 +67,20 @@ export const App = () => {
                 <ProfilePage />
               </ProtectedRouteElement>
             }
-          />
-          <Route
-            path="/profile/orders"
-            element={
-              <ProtectedRouteElement>
-                <OrdersPage />
-              </ProtectedRouteElement>
-            }
-          />
+          >
+            <Route
+              path="/profile/orders"
+              element={
+                <ProtectedRouteElement>
+                  <OrdersPage />
+                </ProtectedRouteElement>
+              }
+            />
+          </Route>
           {/* unprotected */}
-          <Route path="/" element={<ConstructorPage />} />
-          <Route path="/ingredients/:id" element={<IngredientPage />} />
+          <Route path="/" element={<ConstructorPage />}>
+            <Route path="/ingredients/:id" element={<IngredientPage />} />
+          </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
