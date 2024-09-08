@@ -20,8 +20,12 @@ export const IngredientCard = ({ item }: Props) => {
   });
 
   const openIngredientDetails = () => {
-    navigate(`/ingredients/${item._id}`);
-  }
+    navigate(`/ingredients/${item._id}`, {
+      state: {
+        background: '/',
+      }
+    });
+  };
 
   return (
     <li

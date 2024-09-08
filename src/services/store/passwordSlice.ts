@@ -11,16 +11,12 @@ import {
 export const resetPassword = createAsyncThunk<
   ResetPasswordRequestRes,
   ResetPasswordRequestOpts
->('password/resetPassword', async (opts) => {
-  return await resetPasswordRequest(opts);
-});
+>('password/resetPassword', resetPasswordRequest);
 
 export const sendResetEmail = createAsyncThunk<
   SendResetEmailRequestRes,
   SendResetEmailRequestOpts
->('password/sendResetEmail', async (opts) => {
-  return await sendResetEmailRequest(opts);
-});
+>('password/sendResetEmail', sendResetEmailRequest);
 
 export interface PasswordState {
   emailCodeSent: boolean;
@@ -65,7 +61,5 @@ export const passwordSlice = createSlice({
       });
   },
 });
-
-export const {} = passwordSlice.actions;
 
 export default passwordSlice.reducer;

@@ -65,11 +65,13 @@ const ProfilePage = () => {
   const onProfileUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await dispatch(updateUser({
-      email,
-      name,
-      password
-    }))
+    await dispatch(
+      updateUser({
+        email,
+        name,
+        password,
+      })
+    );
 
     setName(user?.name || '');
     setEmail(user?.email || '');
@@ -86,22 +88,30 @@ const ProfilePage = () => {
         <div>
           <NavLink
             to="/profile"
-            className={({isActive}) => clsx(
-              'text text_type_main-medium mb-6 text_color_inactive',
-              styles.navButton,
-              {
-                [styles.navButtonActive]: isActive
-              }
-            )}
+            end
+            className={({ isActive }) =>
+              clsx(
+                'text text_type_main-medium mb-6 text_color_inactive',
+                styles.navButton,
+                {
+                  [styles.navButtonActive]: isActive,
+                }
+              )
+            }
           >
             Профиль
           </NavLink>
           <NavLink
             to="/profile/orders"
-            className={clsx(
-              'text text_type_main-medium mb-6 text_color_inactive',
-              styles.navButton
-            )}
+            className={({ isActive }) =>
+              clsx(
+                'text text_type_main-medium mb-6 text_color_inactive',
+                styles.navButton,
+                {
+                  [styles.navButtonActive]: isActive,
+                }
+              )
+            }
           >
             История заказов
           </NavLink>

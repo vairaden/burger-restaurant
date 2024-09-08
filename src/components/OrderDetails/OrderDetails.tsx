@@ -10,7 +10,7 @@ interface Props {
 export const OrderDetails = ({ orderInfo }: Props) => {
   return (
     <div className={styles.wrapper}>
-      <p className="text text_type_digits-large pt-30">
+      <p className="text text_type_digits-large pt-25">
         {orderInfo.order.number}
       </p>
       <p className="text text_type_main-medium mt-8">идентификатор заказа</p>

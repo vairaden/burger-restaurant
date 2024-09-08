@@ -16,20 +16,19 @@ import {
 } from '../../api/authApi';
 import { RootState } from '.';
 import { User } from '../../types';
-import { refreshTokenRequest, RefreshTokenRequestRes } from '../../api/authApi/refreshTokenRequest';
+import {
+  refreshTokenRequest,
+  RefreshTokenRequestRes,
+} from '../../api/authApi/refreshTokenRequest';
 
 export const register = createAsyncThunk<
   RegisterRequestRes,
   RegisterRequestOpts
->('auth/register', async (opts) => {
-  return await registerRequest(opts);
-});
+>('auth/register', registerRequest);
 
 export const login = createAsyncThunk<LoginRequestRes, LoginRequestOpts>(
   'auth/login',
-  async (opts) => {
-    return await loginRequest(opts);
-  }
+  loginRequest
 );
 
 export const logout = createAsyncThunk<
@@ -54,26 +53,22 @@ export const refreshAccessToken = createAsyncThunk<RefreshTokenRequestRes>(
     const token = localStorage.getItem('refreshToken');
 
     if (!token) {
-      return thunkApi.rejectWithValue({error: 'No refresh token'});
+      return thunkApi.rejectWithValue({ error: 'No refresh token' });
     }
 
-    return await refreshTokenRequest({token});
+    return await refreshTokenRequest({ token });
   }
 );
 
 export const fetchUser = createAsyncThunk<FetchUserRequestRes>(
   'auth/fetchUser',
-  async () => {
-    return await fetchUserRequest();
-  }
+  fetchUserRequest
 );
 
 export const updateUser = createAsyncThunk<
   UpdateUserRequestRes,
   UpdateUserRequestOpts
->('auth/updateUser', async (opts) => {
-  return await updateUserRequest(opts);
-});
+>('auth/updateUser', updateUserRequest);
 
 export interface AuthState {
   accessToken: string;
@@ -190,7 +185,5 @@ export const authSlice = createSlice({
       });
   },
 });
-
-export const {} = authSlice.actions;
 
 export default authSlice.reducer;

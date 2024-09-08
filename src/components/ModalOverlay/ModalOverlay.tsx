@@ -4,7 +4,7 @@ import styles from './ModalOverlay.module.css';
 
 export interface Props {
   children: ReactNode;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export const ModalOverlay = ({children, onClose}: Props) => {
