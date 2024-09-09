@@ -1,13 +1,12 @@
-import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
+import { createSearchParams, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAppSelector } from '../../services/store';
-import { ReactNode, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
-  children: ReactNode;
   protectFromAuthorized?: boolean;
 }
 
-const ProtectedRouteElement = ({ children, protectFromAuthorized }: Props) => {
+const ProtectedRouteElement = ({ protectFromAuthorized }: Props) => {
   const user = useAppSelector((state) => state.authSlice.user);
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,7 +33,7 @@ const ProtectedRouteElement = ({ children, protectFromAuthorized }: Props) => {
     setCanDisplay(true);
   }, [location.pathname, user]);
 
-  return canDisplay ? <>{children}</> : null;
+  return canDisplay ? <Outlet/> : null;
 };
 
 export default ProtectedRouteElement;

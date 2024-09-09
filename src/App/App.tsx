@@ -1,4 +1,3 @@
-import { AppHeader } from '../components/AppHeader';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import ForgotPasswordPage from '../pages/ForgotPasswordPage/ForgotPasswordPage';
 import ConstructorPage from '../pages/ConstructorPage/ConstructorPage';
@@ -14,6 +13,9 @@ import { useEffect } from 'react';
 import ProtectedRouteElement from '../components/ProtectedRouteElement/ProtectedRouteElement';
 import OrdersPage from '../pages/OrdersPage/OrdersPage';
 import IngredientModal from '../components/IngredientModal/IngredientModal';
+import AppLayout from '../layouts/AppLayout/AppLayout';
+import ProfileLayout from '../layouts/ProfileLayout/ProfileLayout';
+import FeedPage from '../pages/FeedPage/FeedPage';
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -26,63 +28,36 @@ export const App = () => {
   }, []);
 
   return (
-    <div className="App">
-      <AppHeader />
+    <div id="app">
       <Routes location={background || location}>
-        {/* protected from authorized users*/}
-        <Route
-          path="/forgot-password"
-          element={
-            <ProtectedRouteElement protectFromAuthorized>
-              <ForgotPasswordPage />
-            </ProtectedRouteElement>
-          }
-        />
-        <Route
-          path="/reset-password"
-          element={
-            <ProtectedRouteElement protectFromAuthorized>
-              <ResetPasswordPage />
-            </ProtectedRouteElement>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <ProtectedRouteElement protectFromAuthorized>
-              <LoginPage />
-            </ProtectedRouteElement>
-          }
-        />
-        <Route
-          path="/register"
-          element={
-            <ProtectedRouteElement protectFromAuthorized>
-              <RegisterPage />
-            </ProtectedRouteElement>
-          }
-        />
-        {/* protected */}
-        <Route
-          path="/profile"
-          element={
-            <ProtectedRouteElement>
-              <ProfilePage />
-            </ProtectedRouteElement>
-          }
-        />
-        <Route
-          path="/profile/orders"
-          element={
-            <ProtectedRouteElement>
-              <OrdersPage />
-            </ProtectedRouteElement>
-          }
-        />
-        {/* unprotected */}
-        <Route path="/" element={<ConstructorPage />} />
-        <Route path="/ingredients/:id" element={<IngredientPage />} />
-        <Route path="*" element={<NotFoundPage />} />
+        <Route path="/" element={<AppLayout />}>
+          {/* unprotected */}
+          <Route index element={<ConstructorPage />} />
+          <Route path="/ingredients/:id" element={<IngredientPage />} />
+
+          {/* protected from authorized users*/}
+          <Route
+            path="/"
+            element={<ProtectedRouteElement protectFromAuthorized />}
+          >
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password" element={<ResetPasswordPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+
+          {/* protected */}
+          <Route path="/" element={<ProtectedRouteElement />}>
+            <Route path="/feed" element={<FeedPage />} />
+            <Route path="/profile" element={<ProfileLayout />}>
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/profile/orders" element={<OrdersPage />} />
+            </Route>
+          </Route>
+
+          {/* 404 */}
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
       </Routes>
 
       {background && (

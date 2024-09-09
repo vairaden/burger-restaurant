@@ -1,4 +1,5 @@
 const OrdersPage = () => {
-  return <div>OrdersPage</div>;
+  return <main>OrdersPage</main>;
 };
+
 export default OrdersPage;
