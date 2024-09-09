@@ -6,17 +6,11 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './AppHeader.module.css';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 
-const enum headerPaths {
-  HOME = '/',
-  ORDERS = '/orders',
-  PROFILE = '/profile',
-}
-
 export const AppHeader = () => {
-  const location = useLocation();
+  const navigate = useNavigate();
 
   return (
     <header className={styles.header}>
@@ -51,7 +45,7 @@ export const AppHeader = () => {
             )}
           </NavLink>
         </div>
-        <div className={styles.logoContainer}>
+        <div className={styles.logoContainer} onClick={() => navigate('/')}>
           <Logo />
         </div>
         <div className={styles.buttonGroupEnd}>

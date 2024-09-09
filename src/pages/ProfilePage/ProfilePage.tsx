@@ -4,7 +4,7 @@ import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { ChangeEvent, FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo } from 'react';
 
 import pageStyles from '../../styles/PageStyles.module.css';
 import styles from './ProfilePage.module.css';
@@ -13,37 +13,27 @@ import clsx from 'clsx';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { store, useAppDispatch, useAppSelector } from '../../services/store';
 import { fetchUser, logout, updateUser } from '../../services/store/authSlice';
+import { useForm } from '../../hooks/useForm';
 
 const ProfilePage = () => {
-  const [name, setName] = useState(() => {
-    return store.getState().authSlice.user?.name || '';
-  });
-  const [email, setEmail] = useState(() => {
-    return store.getState().authSlice.user?.email || '';
-  });
-  const [password, setPassword] = useState('');
+  const { formValues, setFormValues, handleChange } = useForm(() => ({
+    name: store.getState().authSlice.user?.name || '',
+    email: store.getState().authSlice.user?.email || '',
+    password: '',
+  }));
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const user = useAppSelector((state) => state.authSlice.user);
 
-  const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
   const handleLogout = async () => {
-    await dispatch(logout());
-
-    navigate('/login');
+    try {
+      await dispatch(logout()).unwrap();
+      navigate('/login');
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   const fetchUserData = async () => {
@@ -51,31 +41,45 @@ const ProfilePage = () => {
   };
 
   const displayControls = useMemo(() => {
-    return name !== user?.name || email !== user?.email || password !== '';
-  }, [email, name, password, user?.email, user?.name]);
+    return (
+      formValues.name !== user?.name ||
+      formValues.email !== user?.email ||
+      formValues.password !== ''
+    );
+  }, [
+    formValues.email,
+    formValues.name,
+    formValues.password,
+    user?.email,
+    user?.name,
+  ]);
 
   const resetForm = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setName(user?.name || '');
-    setEmail(user?.email || '');
-    setPassword('');
+    setFormValues({
+      name: user?.name || '',
+      email: user?.email || '',
+      password: '',
+    });
   };
 
   const onProfileUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await dispatch(
-      updateUser({
-        email,
-        name,
-        password,
-      })
-    );
+    try {
+      const { user: newUserData } = await dispatch(
+        updateUser(formValues)
+      ).unwrap();
 
-    setName(user?.name || '');
-    setEmail(user?.email || '');
-    setPassword('');
+      setFormValues({
+        name: newUserData.name,
+        email: newUserData.email,
+        password: '',
+      });
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   useEffect(() => {
@@ -140,29 +144,29 @@ const ProfilePage = () => {
             onSubmit={onProfileUpdate}
             onReset={resetForm}
           >
-            {/* @ts-expect-error: missing props */}
             <Input
-              type={'text'}
+              type="text"
               placeholder="Имя"
-              onChange={onNameChange}
-              value={name}
-              name={'name'}
-              size={'default'}
+              onChange={handleChange}
+              value={formValues.name}
+              name="name"
               extraClass="mb-6"
               icon="EditIcon"
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
             />
             <EmailInput
-              onChange={onEmailChange}
-              value={email}
-              name={'email'}
+              onChange={handleChange}
+              value={formValues.email}
+              name="email"
               placeholder="E-mail"
               extraClass="mb-6"
               isIcon
             />
             <PasswordInput
-              onChange={onPasswordChange}
-              value={password}
-              name={'password'}
+              onChange={handleChange}
+              value={formValues.password}
+              name="password"
               placeholder="Пароль"
               extraClass="mb-6"
               icon="EditIcon"

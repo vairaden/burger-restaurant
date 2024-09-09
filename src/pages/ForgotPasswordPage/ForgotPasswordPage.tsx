@@ -4,32 +4,26 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import pageStyles from '../../styles/PageStyles.module.css';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../services/store';
 import { sendResetEmail } from '../../services/store/passwordSlice';
+import { useForm } from '../../hooks/useForm';
 
 const ForgotPasswordPage = () => {
-  const [email, setEmail] = useState('');
+  const { formValues, handleChange } = useForm({
+    email: '',
+  });
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-
-  const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      await dispatch(
-        sendResetEmail({
-          email,
-        })
-      ).unwrap();
-
+      await dispatch(sendResetEmail(formValues)).unwrap();
       navigate('/reset-password');
     } catch (err) {
       console.warn(err);
@@ -49,9 +43,9 @@ const ForgotPasswordPage = () => {
         </p>
         <form className={pageStyles.centerContent} onSubmit={onSubmit}>
           <EmailInput
-            onChange={onEmailChange}
-            value={email}
-            name={'email'}
+            onChange={handleChange}
+            value={formValues.email}
+            name="email"
             placeholder="Укажите e-mail"
             extraClass="mb-6"
           />

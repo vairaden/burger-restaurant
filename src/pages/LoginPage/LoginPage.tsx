@@ -3,7 +3,7 @@ import {
   EmailInput,
   PasswordInput,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 import pageStyles from '../../styles/PageStyles.module.css';
@@ -11,49 +11,41 @@ import clsx from 'clsx';
 import { useAppDispatch } from '../../services/store';
 import { fetchUser, login } from '../../services/store/authSlice';
 import Spinner from '../../components/Spinner/Spinner';
+import { useForm } from '../../hooks/useForm';
 
 const LoginPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [displayLogin, setDisplayLogin] = useState(false);
+
+  const { handleChange, formValues } = useForm({
+    email: '',
+    password: '',
+  });
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await dispatch(
-      login({
-        email,
-        password,
-      })
-    );
+    try {
+      await dispatch(login(formValues)).unwrap();
 
-    if (res.meta.requestStatus === 'fulfilled') {
       navigate(searchParams.get('from_path') || '/');
+    } catch (err) {
+      console.warn(err);
     }
   };
 
   useEffect(() => {
     (async () => {
-      const res = await dispatch(fetchUser());
-
-      if (res.meta.requestStatus === 'fulfilled') {
+      try {
+        await dispatch(fetchUser()).unwrap();
         navigate(searchParams.get('from_path') || '/');
-        return;
+      } catch (err) {
+        console.warn(err);
+        setDisplayLogin(true);
       }
-
-      setDisplayLogin(true);
     })();
   }, []);
 
@@ -74,16 +66,16 @@ const LoginPage = () => {
             </p>
             <form className={pageStyles.centerContent} onSubmit={handleSubmit}>
               <EmailInput
-                onChange={onEmailChange}
-                value={email}
-                name={'email'}
+                onChange={handleChange}
+                value={formValues.email}
+                name="email"
                 placeholder="E-mail"
                 extraClass="mb-6"
               />
               <PasswordInput
-                onChange={onPasswordChange}
-                value={password}
-                name={'password'}
+                onChange={handleChange}
+                value={formValues.password}
+                name="password"
                 placeholder="Пароль"
                 extraClass="mb-6"
               />

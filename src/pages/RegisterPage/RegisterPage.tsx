@@ -6,45 +6,31 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import pageStyles from '../../styles/PageStyles.module.css';
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../services/store';
 import { register } from '../../services/store/authSlice';
+import { useForm } from '../../hooks/useForm';
 
 const RegisterPage = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const onNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setName(e.target.value);
-  };
-
-  const onEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-  };
-
-  const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
+  const { formValues, handleChange } = useForm({
+    name: '',
+    email: '',
+    password: '',
+  });
 
   const onRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await dispatch(
-      register({
-        email,
-        name,
-        password,
-      })
-    );
-
-    if (res.meta.requestStatus === 'fulfilled') {
+    try {
+      await dispatch(register(formValues)).unwrap();
       navigate('/');
+    } catch (err) {
+      console.warn(err);
     }
   };
 
@@ -60,27 +46,27 @@ const RegisterPage = () => {
           Регистрация
         </p>
         <form className={pageStyles.centerContent} onSubmit={onRegister}>
-          {/* @ts-expect-error: missing props */}
           <Input
-            type={'text'}
+            type="text"
             placeholder="Имя"
-            onChange={onNameChange}
-            value={name}
-            name={'name'}
-            size={'default'}
+            onChange={handleChange}
+            value={formValues.name}
+            name="name"
             extraClass="mb-6"
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
           />
           <EmailInput
-            onChange={onEmailChange}
-            value={email}
-            name={'email'}
+            onChange={handleChange}
+            value={formValues.email}
+            name="email"
             placeholder="E-mail"
             extraClass="mb-6"
           />
           <PasswordInput
-            onChange={onPasswordChange}
-            value={password}
-            name={'password'}
+            onChange={handleChange}
+            value={formValues.password}
+            name="password"
             placeholder="Пароль"
             extraClass="mb-6"
           />
