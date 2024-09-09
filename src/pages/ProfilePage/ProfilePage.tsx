@@ -28,9 +28,12 @@ const ProfilePage = () => {
   const user = useAppSelector((state) => state.authSlice.user);
 
   const handleLogout = async () => {
-    await dispatch(logout());
-
-    navigate('/login');
+    try {
+      await dispatch(logout()).unwrap();
+      navigate('/login');
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   const fetchUserData = async () => {
@@ -64,13 +67,19 @@ const ProfilePage = () => {
   const onProfileUpdate = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    await dispatch(updateUser(formValues));
+    try {
+      const { user: newUserData } = await dispatch(
+        updateUser(formValues)
+      ).unwrap();
 
-    setFormValues({
-      name: user?.name || '',
-      email: user?.email || '',
-      password: '',
-    });
+      setFormValues({
+        name: newUserData.name,
+        email: newUserData.email,
+        password: '',
+      });
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   useEffect(() => {
