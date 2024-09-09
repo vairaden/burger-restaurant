@@ -1,4 +1,5 @@
 .modalPanel {
+  padding-top: 20px;
   background-color: var(--modal-bg);
   min-width: 720px;
   min-height: 300px;

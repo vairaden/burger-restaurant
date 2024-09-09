@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
-import { createOrderRequest } from '../../api/createOrderRequest';
 import { OrderInfo } from '../../types';
 import { clearIngredients } from './ingredientsSlice';
 import { clearConstructor } from './constructorSlice';
+import { createOrderRequest } from '../../api/orderApi';
 
 export interface OrdersState {
   selectedOrder: OrderInfo | null;
@@ -21,7 +20,7 @@ export const createOrder = createAsyncThunk<
   OrderInfo,
   { ingredientIds: string[] }
 >('orders/createOrder', async ({ ingredientIds }, thunkAPI) => {
-  const order = await createOrderRequest(ingredientIds);
+  const order = await createOrderRequest({ingredients: ingredientIds});
 
   thunkAPI.dispatch(clearIngredients())
   thunkAPI.dispatch(clearConstructor());
@@ -40,15 +39,18 @@ export const ordersSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createOrder.pending, (state) => {
+        state.error = false;
         state.loading = true;
       })
       .addCase(createOrder.fulfilled, (state, action) => {
         state.selectedOrder = action.payload;
         state.loading = false;
       })
-      .addCase(createOrder.rejected, (state) => {
-        state = initialState;
-        state.error = true;
+      .addCase(createOrder.rejected, () => {
+        return {
+          ...initialState,
+          error: true,
+        };
       });
   },
 });

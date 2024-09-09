@@ -8,10 +8,10 @@ export interface Props {
 export const IngredientDetails = ({ ingredient }: Props) => {
   return (
     <>
-      <p className="text text_type_main-large pt-10 ml-10 mr-10">
-        Детали ингедиента
-      </p>
       <div className={styles.container}>
+        <p className="text text_type_main-large pt-10 ml-10 mr-10">
+          Детали ингедиента
+        </p>
         <img src={ingredient.image_large} alt={ingredient.name} />
         <p className="text text_type_main-medium mt-4">{ingredient.name}</p>
 

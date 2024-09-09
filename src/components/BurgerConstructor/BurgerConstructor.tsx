@@ -24,6 +24,8 @@ import {
 } from '../../services/store/ordersSlice';
 import ConstructorListItem from '../ConstructorListItem/ConstructorListItem';
 import { useAppDispatch, useAppSelector } from '../../services/store';
+import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
+import Spinner from '../Spinner/Spinner';
 
 interface DropParams {
   item: Ingredient;
@@ -31,11 +33,16 @@ interface DropParams {
 
 export const BurgerConstructor = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const { ingredientsInBurger, bun } = useAppSelector(
     (state) => state.constructorSlice
   );
-
-  const { selectedOrder } = useAppSelector((state) => state.ordersSlice);
+  const user = useAppSelector((state) => state.authSlice.user);
+  const { selectedOrder, loading: orderLoading } = useAppSelector(
+    (state) => state.ordersSlice
+  );
 
   const onDropHandler = ({ item }: DropParams) => {
     dispatch(addIngredient({ item }));
@@ -65,17 +72,30 @@ export const BurgerConstructor = () => {
   }, [bun, ingredientsInBurger]);
 
   const onCreateOrder = () => {
-    if (bun) {
-      dispatch(
-        createOrder({
-          ingredientIds: [
-            ...ingredientsInBurger.map((item) => item._id),
-            bun._id,
-            bun._id,
-          ],
-        })
-      );
+    if (!bun) {
+      return;
     }
+
+    if (!user) {
+      navigate({
+        pathname: '/login',
+        search: createSearchParams({
+          from_path: location.pathname,
+        }).toString(),
+      });
+
+      return;
+    }
+
+    dispatch(
+      createOrder({
+        ingredientIds: [
+          ...ingredientsInBurger.map((item) => item._id),
+          bun._id,
+          bun._id,
+        ],
+      })
+    );
   };
 
   const onCloseOrderModal = () => {
@@ -84,8 +104,16 @@ export const BurgerConstructor = () => {
 
   return (
     <>
+      {orderLoading && (
+        <Modal>
+          <div className={styles.loadingContent}>
+            <p className={'text text_type_main-large mb-4'}>Создание заказа</p>
+            <Spinner />
+          </div>
+        </Modal>
+      )}
       {selectedOrder && (
-        <Modal open={!!selectedOrder} onClose={onCloseOrderModal}>
+        <Modal onClose={onCloseOrderModal}>
           <OrderDetails orderInfo={selectedOrder} />
         </Modal>
       )}
@@ -97,13 +125,7 @@ export const BurgerConstructor = () => {
           })}
           ref={dropRef}
         >
-          {bun && (
-            <ConstructorListItem
-              locked
-              item={bun}
-              type="top"
-            />
-          )}
+          {bun && <ConstructorListItem locked item={bun} type="top" />}
 
           {ingredientsInBurger.map((item) => (
             <ConstructorListItem
@@ -114,13 +136,7 @@ export const BurgerConstructor = () => {
             />
           ))}
 
-          {bun && (
-            <ConstructorListItem
-              locked
-              item={bun}
-              type="bottom"
-            />
-          )}
+          {bun && <ConstructorListItem locked item={bun} type="bottom" />}
         </ul>
 
         <div className={clsx(styles.checkoutBlockWrapper, 'mr-4 mt-10')}>

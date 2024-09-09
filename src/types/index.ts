@@ -27,3 +27,8 @@ export interface OrderInfo {
     number: number;
   };
 }
+
+export interface User {
+  email: string;
+  name: string;
+}

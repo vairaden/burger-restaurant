@@ -9,15 +9,14 @@ const modalRoot = document.getElementById('modal') as HTMLElement;
 
 export interface Props {
   children: ReactNode;
-  open: boolean;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
-export const Modal = ({ children, open, onClose }: Props) => {
+export const Modal = ({ children, onClose }: Props) => {
   useEffect(() => {
     const closeModal = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        onClose();
+        onClose?.();
       }
     };
 
@@ -28,16 +27,14 @@ export const Modal = ({ children, open, onClose }: Props) => {
     };
   }, []);
 
-  if (!open) {
-    return null;
-  }
-
   return createPortal(
     <ModalOverlay onClose={onClose}>
       <div className={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
-        <button className={styles.closeButton} onClick={onClose}>
-          <CloseIcon type="primary" />
-        </button>
+        {onClose && (
+          <button className={styles.closeButton} onClick={onClose}>
+            <CloseIcon type="primary" />
+          </button>
+        )}
         {children}
       </div>
     </ModalOverlay>,
