@@ -5,42 +5,34 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import pageStyles from '../../styles/PageStyles.module.css';
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { resetPassword } from '../../services/store/passwordSlice';
+import { useForm } from '../../hooks/useForm';
 
 const ResetPasswordPage = () => {
-  const [code, setCode] = useState('');
-  const [password, setPassword] = useState('');
-
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+
+  const { formValues, handleChange } = useForm({
+    token: '',
+    password: '',
+  });
+
   const emailCodeSent = useAppSelector(
     (store) => store.passwordSlice.emailCodeSent
   );
 
-  const onCodeChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setCode(e.target.value);
-  };
-
-  const onPasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-  };
-
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const res = await dispatch(
-      resetPassword({
-        token: code,
-        password,
-      })
-    );
-
-    if (res.meta.requestStatus === 'fulfilled') {
+    try {
+      await dispatch(resetPassword(formValues)).unwrap();
       navigate('/profile');
+    } catch (err) {
+      console.warn(err);
     }
   };
 
@@ -67,23 +59,22 @@ const ResetPasswordPage = () => {
         </p>
         <form className={pageStyles.centerContent} onSubmit={onSubmit}>
           <PasswordInput
-            onChange={onPasswordChange}
-            value={password}
-            name={'password'}
+            onChange={handleChange}
+            value={formValues.password}
+            name="password"
             placeholder="Введите новый пароль"
             extraClass="mb-6"
           />
-          {/* @ts-expect-error: missing props */}
           <Input
-            type={'text'}
+            type="text"
             placeholder="Введите код из письма"
-            onChange={onCodeChange}
-            value={code}
-            name={'code'}
-            size={'default'}
+            onChange={handleChange}
+            value={formValues.token}
+            name="token"
             extraClass="mb-6"
+            onPointerEnterCapture={undefined}
+            onPointerLeaveCapture={undefined}
           />
-
           <Button
             htmlType="submit"
             type="primary"

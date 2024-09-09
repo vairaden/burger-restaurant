@@ -84,12 +84,11 @@ export const App = () => {
         <Route path="/ingredients/:id" element={<IngredientPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
+
       {background && (
-
         <Routes>
-        <Route path="/ingredients/:id" element={<IngredientModal/>} />
-
-      </Routes>
+          <Route path="/ingredients/:id" element={<IngredientModal />} />
+        </Routes>
       )}
     </div>
   );
