@@ -54,6 +54,9 @@ const OrderDetails = () => {
       case OrderStatus.DONE:
         status = 'Выполнен';
         break;
+      case OrderStatus.CANCELED:
+        status = 'Отменен';
+        break;
     }
     return status;
   }, [order]);

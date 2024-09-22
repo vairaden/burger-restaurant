@@ -32,6 +32,7 @@ export const enum OrderStatus {
   CREATED = 'created',
   PENDING = 'pending',
   DONE = 'done',
+  CANCELED = 'canceled',
 }
 
 export interface OrderDetails {
