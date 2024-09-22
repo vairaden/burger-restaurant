@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
-import { logout } from '../../services/store/authSlice';
+import { logout } from '../../services/store/slices/authSlice';
 import { useAppDispatch } from '../../services/store';
 
 import styles from './ProfileLayout.module.css';

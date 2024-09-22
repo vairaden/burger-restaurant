@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { ConstructorIngredient } from '../../types';
+import { ConstructorIngredient } from '../../../types';
 import { v4 as uuid } from 'uuid';
 
 export interface ConstructorState {

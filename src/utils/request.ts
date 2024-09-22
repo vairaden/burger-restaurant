@@ -1,6 +1,6 @@
 import { API_URL } from '../constants';
 import { store } from '../services/store';
-import { refreshAccessToken } from '../services/store/authSlice';
+import { refreshAccessToken } from '../services/store/slices/authSlice';
 import checkResponse from './checkResponse';
 
 interface ApiRequest {

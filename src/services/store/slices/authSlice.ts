@@ -13,13 +13,13 @@ import {
   updateUserRequest,
   UpdateUserRequestOpts,
   UpdateUserRequestRes,
-} from '../../api/authApi';
-import { RootState } from '.';
-import { User } from '../../types';
+} from '../../../api/authApi';
+import { RootState } from '..';
+import { User } from '../../../types';
 import {
   refreshTokenRequest,
   RefreshTokenRequestRes,
-} from '../../api/authApi/refreshTokenRequest';
+} from '../../../api/authApi/refreshTokenRequest';
 
 export const register = createAsyncThunk<
   RegisterRequestRes,

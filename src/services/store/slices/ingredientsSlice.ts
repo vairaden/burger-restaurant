@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { getIngredients } from '../../api/getIngredients';
-import { Ingredient, IngredientListItem } from '../../types';
+import { getIngredients } from '../../../api/getIngredients';
+import { Ingredient, IngredientListItem } from '../../../types';
 
 export interface IngredientsState {
   ingredients: IngredientListItem[];

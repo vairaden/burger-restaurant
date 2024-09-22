@@ -12,16 +12,16 @@ import clsx from 'clsx';
 import {
   addIngredient,
   deleteIngredient,
-} from '../../services/store/constructorSlice';
+} from '../../services/store/slices/constructorSlice';
 import { ConstructorIngredient, Ingredient } from '../../types';
 import {
   decreaseIngredientNumber,
   increaseIngredientNumber,
-} from '../../services/store/ingredientsSlice';
+} from '../../services/store/slices/ingredientsSlice';
 import {
   clearSelectedOrder,
   createOrder,
-} from '../../services/store/ordersSlice';
+} from '../../services/store/slices/ordersSlice';
 import ConstructorListItem from '../ConstructorListItem/ConstructorListItem';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';

@@ -8,7 +8,7 @@ import IngredientPage from '../pages/IngredientPage/IngredientPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
 import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
 import { useAppDispatch } from '../services/store';
-import { fetchIngredientsList } from '../services/store/ingredientsSlice';
+import { fetchIngredientsList } from '../services/store/slices/ingredientsSlice';
 import { useEffect } from 'react';
 import ProtectedRouteElement from '../components/ProtectedRouteElement/ProtectedRouteElement';
 import OrdersPage from '../pages/OrdersPage/OrdersPage';

@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
-  resetPasswordRequest,
-  ResetPasswordRequestOpts,
   ResetPasswordRequestRes,
-  sendResetEmailRequest,
-  SendResetEmailRequestOpts,
+  ResetPasswordRequestOpts,
+  resetPasswordRequest,
   SendResetEmailRequestRes,
-} from '../../api/authApi';
+  SendResetEmailRequestOpts,
+  sendResetEmailRequest,
+} from '../../../api/authApi';
 
 export const resetPassword = createAsyncThunk<
   ResetPasswordRequestRes,

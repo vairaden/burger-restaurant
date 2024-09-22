@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { OrderInfo } from '../../types';
+import { OrderInfo } from '../../../types';
 import { clearIngredients } from './ingredientsSlice';
 import { clearConstructor } from './constructorSlice';
-import { createOrderRequest } from '../../api/orderApi';
+import { createOrderRequest } from '../../../api/orderApi';
 
 export interface OrdersState {
   selectedOrder: OrderInfo | null;
