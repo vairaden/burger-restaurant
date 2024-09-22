@@ -11,7 +11,11 @@ const IngredientPage = () => {
   const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
 
   const selectedIngredient = useMemo(() => {
-    return ingredients.find((item) => item._id === id);
+    if (!id) {
+      return undefined;
+    }
+
+    return ingredients[id];
   }, [id, ingredients]);
 
   return (

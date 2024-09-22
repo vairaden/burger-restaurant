@@ -19,26 +19,37 @@ export const socketMiddleware: Middleware<{}, RootState> =
 
       if (type === 'websocket/wsConnectionStart') {
         const { config } = payload;
-        const { url } = websocketConfigs[config];
+        let { url, needAuth } = websocketConfigs[config];
+
+        if (needAuth) {
+          const accessToken = getState().authSlice.accessToken.split(' ')[1];
+          url = url.concat(`?token=${accessToken}`);
+        }
+
+        if (socket) {
+          socket.close();
+          socket = null;
+        }
+
         socket = new WebSocket(url);
       }
 
       if (socket) {
         socket.onopen = (event) => {
-          dispatch(wsConnectionSuccess({ event }));
+          dispatch(wsConnectionSuccess());
         };
 
         socket.onerror = (event) => {
-          dispatch(wsConnectionError({ event }));
+          dispatch(wsConnectionError());
         };
 
         socket.onmessage = (event) => {
           const { data } = event;
-          dispatch(wsGetMessage({ data }));
+          dispatch(wsGetMessage({ message: data }));
         };
 
         socket.onclose = (event) => {
-          dispatch(wsConnectionClosed({ event }));
+          dispatch(wsConnectionClosed({ code: event.code }));
         };
 
         if (type === 'websocket/wsSendMessage') {

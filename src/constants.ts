@@ -1,17 +1,19 @@
-import { WebsocketConfig } from './types';
+import { WebsocketConfigType } from './types';
 
 export const API_URL = 'https://norma.nomoreparties.space/api';
 
-export const enum WebsocketConfigTypes {
+export const enum WebsocketConfig {
   ORDERS_ALL = 'orders_personal',
   ORDERS_PERSONAL = 'orders_all',
 }
 
-export const websocketConfigs: Record<WebsocketConfigTypes, WebsocketConfig> = {
-  [WebsocketConfigTypes.ORDERS_ALL]: {
+export const websocketConfigs: Record<WebsocketConfig, WebsocketConfigType> = {
+  [WebsocketConfig.ORDERS_ALL]: {
     url: 'wss://norma.nomoreparties.space/orders/all',
+    needAuth: false,
   },
-  [WebsocketConfigTypes.ORDERS_PERSONAL]: {
+  [WebsocketConfig.ORDERS_PERSONAL]: {
     url: 'wss://norma.nomoreparties.space/orders',
+    needAuth: true,
   },
 };

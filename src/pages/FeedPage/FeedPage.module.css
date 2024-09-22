@@ -1,0 +1,26 @@
+.container {
+  width: fit-content;
+  display: grid;
+  grid-template-columns: 580px 580px;
+  gap: 60px;
+  margin: auto;
+}
+
+.orderStatuses {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.orderList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  height: 600px;
+  overflow-y: auto;
+}
+
+.list {
+  list-style: none;
+}

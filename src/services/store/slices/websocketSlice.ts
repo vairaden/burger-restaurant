@@ -1,22 +1,27 @@
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { WebsocketConfigTypes } from '../../../constants';
+import { WebsocketConfig } from '../../../constants';
+import { OrderDetails } from '../../../types';
 
 interface IMessage {
-  type: string;
-  data: string;
+  success: boolean;
+  orders: OrderDetails[];
+  total: number;
+  totalToday: number;
 }
 
 interface InitialState {
   wsConnected: boolean;
   messages: IMessage[];
-  error: Event | null;
+  error: boolean;
+  loading: boolean;
 }
 
 const initialState: InitialState = {
   wsConnected: false,
   messages: [],
-  error: null,
+  loading: true,
+  error: false,
 };
 
 export const websocketSlice = createSlice({
@@ -25,27 +30,33 @@ export const websocketSlice = createSlice({
   reducers: {
     wsConnectionStart: (
       state,
-      action: PayloadAction<{ config: WebsocketConfigTypes }>
-    ) => {},
-    wsConnectionSuccess: (state, action: PayloadAction<{ event: Event }>) => {
-      state.error = null;
-      state.wsConnected = true;
-    },
-    wsConnectionError: (state, action: PayloadAction<{ event: Event }>) => {},
-    wsConnectionClosed: (
-      state,
-      action: PayloadAction<{ event: CloseEvent }>
+      action: PayloadAction<{ config: WebsocketConfig }>
     ) => {
-      const { event } = action.payload;
-      state.error = null;
+      state.error = false;
+      state.wsConnected = false;
+      state.loading = true;
+    },
+    wsConnectionSuccess: (state) => {
+      state.error = false;
+      state.wsConnected = true;
+      state.loading = false;
+    },
+    wsConnectionError: (state) => {
+      state.error = true;
+      state.wsConnected = false;
+      state.loading = false;
+    },
+    wsConnectionClosed: (state, action: PayloadAction<{ code: number }>) => {
+      state.loading = false;
+      state.error = false;
       state.wsConnected = false;
     },
-    wsGetMessage: (state, action: PayloadAction<{ data: string }>) => {
-      state.error = null;
-      state.messages = [
-        ...state.messages,
-        { type: '', data: action.payload.data },
-      ];
+    wsGetMessage: (state, action: PayloadAction<{ message: string }>) => {
+      const { message } = action.payload;
+      const data = JSON.parse(message);
+
+      state.error = false;
+      state.messages = [data, ...state.messages.slice(0, 9)];
     },
     wsSendMessage: () => {},
   },

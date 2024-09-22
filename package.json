@@ -6,6 +6,7 @@
     "@reduxjs/toolkit": "^2.2.6",
     "@ya.praktikum/react-developer-burger-ui-components": "^1.14.0",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.13",
     "react": "^18.3.1",
     "react-dnd": "^16.0.1",
     "react-dnd-html5-backend": "^16.0.1",

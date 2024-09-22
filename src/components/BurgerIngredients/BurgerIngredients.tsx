@@ -19,9 +19,7 @@ export const BurgerIngredients = () => {
   const mainTabRef = useRef<HTMLParagraphElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
 
-  const { ingredients } = useAppSelector(
-    (state) => state.ingredientsSlice
-  );
+  const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
 
   useEffect(() => {
     const bunTabElement = bunTabRef.current as HTMLParagraphElement;
@@ -92,13 +90,10 @@ export const BurgerIngredients = () => {
           Булки
         </p>
         <ul className={styles.ingredientsList}>
-          {ingredients
+          {Object.values(ingredients)
             .filter((item) => item.type === 'bun')
             .map((item) => (
-              <IngredientCard
-                item={item}
-                key={item._id}
-              />
+              <IngredientCard item={item} key={item._id} />
             ))}
         </ul>
 
@@ -106,13 +101,10 @@ export const BurgerIngredients = () => {
           Соусы
         </p>
         <ul className={styles.ingredientsList}>
-          {ingredients
+          {Object.values(ingredients)
             .filter((item) => item.type === 'sauce')
             .map((item) => (
-              <IngredientCard
-                item={item}
-                key={item._id}
-              />
+              <IngredientCard item={item} key={item._id} />
             ))}
         </ul>
 
@@ -120,13 +112,10 @@ export const BurgerIngredients = () => {
           Начинки
         </p>
         <ul className={styles.ingredientsList}>
-          {ingredients
+          {Object.values(ingredients)
             .filter((item) => item.type === 'main')
             .map((item) => (
-              <IngredientCard
-                item={item}
-                key={item._id}
-              />
+              <IngredientCard item={item} key={item._id} />
             ))}
         </ul>
       </div>
