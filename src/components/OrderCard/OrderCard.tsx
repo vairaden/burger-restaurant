@@ -64,9 +64,9 @@ const OrderCard = ({ order, showStatus = false }: Props) => {
         {statusText}
       </div>
       <div className={styles.flexContainer}>
-        <div className={styles.ingredientsContainer}>
+        <ul className={styles.ingredientsContainer}>
           {order.ingredients.slice(0, 6).map((id, index) => (
-            <div
+            <li
               key={id + index}
               className={styles.ingredient}
               style={{ zIndex: 500 - index }}
@@ -83,9 +83,9 @@ const OrderCard = ({ order, showStatus = false }: Props) => {
                   </div>
                 </div>
               )}
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
         <div className={clsx('text text_type_digits-default', styles.price)}>
           <div>
             {order.ingredients.reduce(

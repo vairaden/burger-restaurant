@@ -1,15 +1,19 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useAppSelector } from '../../services/store';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Modal } from '../Modal';
+import OrderDetails from '../OrderDetails/OrderDetails';
 
 const OrderModal = () => {
-  const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
   const onClose = () => {
     navigate(location.state.background || '/');
   };
-  return <Modal onClose={onClose}>{id}</Modal>;
+
+  return (
+    <Modal onClose={onClose}>
+      <OrderDetails />
+    </Modal>
+  );
 };
 export default OrderModal;

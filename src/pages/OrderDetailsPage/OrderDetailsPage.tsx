@@ -1,6 +1,12 @@
+import OrderDetails from '../../components/OrderDetails/OrderDetails';
+import styles from './OrderDetailsPage.module.css';
+
 const OrderDetailsPage = () => {
   return (
-    <div>OrderDetailsPage</div>
-  )
-}
-export default OrderDetailsPage
+    <div className={styles.container}>
+      <OrderDetails />
+    </div>
+  );
+};
+
+export default OrderDetailsPage;

@@ -55,8 +55,8 @@ export const App = () => {
             <Route path="/profile" element={<ProfileLayout />}>
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/profile/orders" element={<OrdersPage />} />
-              <Route path="/profile/orders/:id" element={<OrderDetailsPage />} />
             </Route>
+            <Route path="/profile/orders/:id" element={<OrderDetailsPage />} />
           </Route>
 
           {/* 404 */}

@@ -17,6 +17,7 @@
 }
 
 .ingredientsContainer {
+  list-style: none;
   display: flex;
   padding-left: 16px;
 }

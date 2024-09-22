@@ -6,7 +6,7 @@ import { useMemo } from 'react';
 
 import styles from './BurgerConstructor.module.css';
 import { Modal } from '../Modal';
-import { OrderDetails } from '../OrderDetails';
+import { OrderCreatedInfo } from '../OrderCreatedInfo';
 import { useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import {
@@ -114,7 +114,7 @@ export const BurgerConstructor = () => {
       )}
       {selectedOrder && (
         <Modal onClose={onCloseOrderModal}>
-          <OrderDetails orderInfo={selectedOrder} />
+          <OrderCreatedInfo orderInfo={selectedOrder} />
         </Modal>
       )}
 
