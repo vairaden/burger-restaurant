@@ -1,7 +1,6 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { getIngredients } from '../../../api/getIngredients';
-import { Ingredient, IngredientListItem } from '../../../types';
+import { WebsocketConfigTypes } from '../../../constants';
 
 interface IMessage {
   type: string;
@@ -11,25 +10,43 @@ interface IMessage {
 interface InitialState {
   wsConnected: boolean;
   messages: IMessage[];
-  error?: Event;
+  error: Event | null;
 }
 
 const initialState: InitialState = {
   wsConnected: false,
   messages: [],
+  error: null,
 };
 
 export const websocketSlice = createSlice({
   name: 'websocket',
   initialState,
   reducers: {
-    wsConnectionStart: () => {},
-    wsConnectionSuccess: (state, action: PayloadAction<{event: Event}>) => {},
-    wsConnectionError: (state, action: PayloadAction<{event: Event}>) => {},
-    wsConnectionClosed: (state, action: PayloadAction<{event: CloseEvent}>) => {
-      const {event} =action.payload;
+    wsConnectionStart: (
+      state,
+      action: PayloadAction<{ config: WebsocketConfigTypes }>
+    ) => {},
+    wsConnectionSuccess: (state, action: PayloadAction<{ event: Event }>) => {
+      state.error = null;
+      state.wsConnected = true;
     },
-    wsGetMessage: (state, action: PayloadAction<{data: string}>) => {},
+    wsConnectionError: (state, action: PayloadAction<{ event: Event }>) => {},
+    wsConnectionClosed: (
+      state,
+      action: PayloadAction<{ event: CloseEvent }>
+    ) => {
+      const { event } = action.payload;
+      state.error = null;
+      state.wsConnected = false;
+    },
+    wsGetMessage: (state, action: PayloadAction<{ data: string }>) => {
+      state.error = null;
+      state.messages = [
+        ...state.messages,
+        { type: '', data: action.payload.data },
+      ];
+    },
     wsSendMessage: () => {},
   },
 });
@@ -43,6 +60,8 @@ export const {
   wsSendMessage,
 } = websocketSlice.actions;
 
-export type WebsocketActions = ReturnType<typeof websocketSlice.actions[keyof typeof websocketSlice.actions]>
+export type WebsocketActions = ReturnType<
+  (typeof websocketSlice.actions)[keyof typeof websocketSlice.actions]
+>;
 
 export default websocketSlice.reducer;

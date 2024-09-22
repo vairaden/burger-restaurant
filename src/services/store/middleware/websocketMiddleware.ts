@@ -1,36 +1,44 @@
-import type { Middleware, MiddlewareAPI } from 'redux';
-import { AppDispatch, RootState } from '..';
-import { WebsocketActions, wsConnectionClosed, wsConnectionError, wsConnectionSuccess, wsGetMessage } from '../slices/websocketSlice';
+import type { Middleware } from 'redux';
+import { RootState } from '..';
+import {
+  WebsocketActions,
+  wsConnectionClosed,
+  wsConnectionError,
+  wsConnectionSuccess,
+  wsGetMessage,
+} from '../slices/websocketSlice';
+import { websocketConfigs } from '../../../constants';
 
+export const socketMiddleware: Middleware<{}, RootState> =
+  (store) => (next) => {
+    let socket: WebSocket | null = null;
 
-export const socketMiddleware = (wsUrl: string): Middleware => {
-    return ((store: MiddlewareAPI<AppDispatch, RootState>) => {
-        let socket: WebSocket | null = null;
-
-    return next => (action: WebsocketActions) => {
+    return (action) => {
       const { dispatch, getState } = store;
-      const { type, payload } = action;
+      const { type, payload } = action as WebsocketActions;
 
       if (type === 'websocket/wsConnectionStart') {
-        socket = new WebSocket(wsUrl);
+        const { config } = payload;
+        const { url } = websocketConfigs[config];
+        socket = new WebSocket(url);
       }
 
       if (socket) {
-        socket.onopen = event => {
+        socket.onopen = (event) => {
           dispatch(wsConnectionSuccess({ event }));
         };
 
-        socket.onerror = event => {
+        socket.onerror = (event) => {
           dispatch(wsConnectionError({ event }));
         };
 
-        socket.onmessage = event => {
+        socket.onmessage = (event) => {
           const { data } = event;
           dispatch(wsGetMessage({ data }));
         };
 
-        socket.onclose = event => {
-          dispatch(wsConnectionClosed({event}));
+        socket.onclose = (event) => {
+          dispatch(wsConnectionClosed({ event }));
         };
 
         if (type === 'websocket/wsSendMessage') {
@@ -41,5 +49,4 @@ export const socketMiddleware = (wsUrl: string): Middleware => {
 
       next(action);
     };
-    }) as Middleware;
-};
+  };

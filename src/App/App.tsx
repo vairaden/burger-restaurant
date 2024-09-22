@@ -16,6 +16,7 @@ import IngredientModal from '../components/IngredientModal/IngredientModal';
 import AppLayout from '../layouts/AppLayout/AppLayout';
 import ProfileLayout from '../layouts/ProfileLayout/ProfileLayout';
 import FeedPage from '../pages/FeedPage/FeedPage';
+import OrderModal from '../components/OrderModal/OrderModal';
 
 export const App = () => {
   const dispatch = useAppDispatch();
@@ -49,9 +50,11 @@ export const App = () => {
           {/* protected */}
           <Route path="/" element={<ProtectedRouteElement />}>
             <Route path="/feed" element={<FeedPage />} />
+            <Route path="/feed/:id" element={<OrdersPage />} />
             <Route path="/profile" element={<ProfileLayout />}>
               <Route path="/profile" element={<ProfilePage />} />
               <Route path="/profile/orders" element={<OrdersPage />} />
+              <Route path="/profile/orders/:id" element={<OrdersPage />} />
             </Route>
           </Route>
 
@@ -63,6 +66,8 @@ export const App = () => {
       {background && (
         <Routes>
           <Route path="/ingredients/:id" element={<IngredientModal />} />
+          <Route path="/profile/orders/:id" element={<OrderModal />} />
+          <Route path="/feed/:id" element={<OrderModal />} />
         </Routes>
       )}
     </div>
