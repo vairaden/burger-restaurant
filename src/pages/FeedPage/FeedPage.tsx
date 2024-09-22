@@ -48,7 +48,10 @@ const FeedPage = () => {
   }, []);
 
   return (
-    <main>
+    <main className={styles.pageWrapper}>
+      <div className={clsx('text text_type_main-large', styles.header)}>
+        Лента заказов
+      </div>
       {data && (
         <div className={styles.container}>
           <ul className={styles.orderList}>
@@ -61,11 +64,13 @@ const FeedPage = () => {
           <div>
             <div className={styles.orderStatuses}>
               <div className="text text_type_main-medium">
-                Готовы:
+                <div className="mb-6">Готовы:</div>
                 {ordersDone && (
                   <ul
                     className={clsx(
                       styles.list,
+                      styles.orders,
+                      styles.readyOrders,
                       'text text_type_digits-default'
                     )}
                   >
@@ -76,11 +81,12 @@ const FeedPage = () => {
                 )}
               </div>
               <div className="text text_type_main-medium">
-                В работе:
+                <div className="mb-6">В работе:</div>
                 {ordersInProgress && (
                   <ul
                     className={clsx(
                       styles.list,
+                      styles.orders,
                       'text text_type_digits-default'
                     )}
                   >
@@ -91,11 +97,11 @@ const FeedPage = () => {
                 )}
               </div>
             </div>
-            <div className="text text_type_main-medium">
+            <div className="text text_type_main-medium mt-15">
               Выполнено за все время:
             </div>
             <div className="text text_type_digits-large">{data.total}</div>
-            <div className="text text_type_main-medium">
+            <div className="text text_type_main-medium mt-15">
               Выполнено за сегодня:
             </div>
             <div className="text text_type_digits-large">{data.totalToday}</div>

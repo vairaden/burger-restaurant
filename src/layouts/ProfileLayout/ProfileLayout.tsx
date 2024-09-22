@@ -1,13 +1,15 @@
 import clsx from 'clsx';
-import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { logout } from '../../services/store/slices/authSlice';
 import { useAppDispatch } from '../../services/store';
 
 import styles from './ProfileLayout.module.css';
+import { useMemo } from 'react';
 
 const ProfileLayout = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+  const location = useLocation();
 
   const handleLogout = async () => {
     try {
@@ -17,6 +19,15 @@ const ProfileLayout = () => {
       console.warn(err);
     }
   };
+
+  const locationDescription = useMemo(() => {
+    switch (location.pathname) {
+      case '/profile':
+        return 'В этом разделе вы можете изменить свои персональные данные';
+      default:
+        return 'В этом разделе вы можете просмотреть свою историю заказов';
+    }
+  }, [location.pathname]);
 
   return (
     <div className={styles.wrapper}>
@@ -65,7 +76,7 @@ const ProfileLayout = () => {
               'text text_type_main-default text_color_inactive mt-20'
             )}
           >
-            В этом разделе вы можете изменить свои персональные данные
+            {locationDescription}
           </p>
         </div>
       </aside>

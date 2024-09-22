@@ -6,19 +6,7 @@
   flex-direction: column;
   padding: 24px;
   border-radius: 40px;
-}
-
-.ingredientImage {
-  width: 64px;
-  height: 64px;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #801ab3;
-  border-radius: 100px;
-  margin-left: -20px;
-  background-color: black;
+  gap: 24px;
 }
 
 .flexContainer {
@@ -26,4 +14,53 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.ingredientsContainer {
+  display: flex;
+  padding-left: 16px;
+}
+
+.ingredient {
+  width: 64px;
+  height: 64px;
+  overflow: hidden;
+  border: 2px solid #801ab3;
+  border-radius: 100px;
+  margin-left: -16px;
+  background-color: black;
+  position: relative;
+}
+
+.ingredientImage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.ingredientWrapCounter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 64px;
+  height: 64px;
+  background-color: #00000074;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.price {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.readyStatus {
+  color: #00cccc;
 }

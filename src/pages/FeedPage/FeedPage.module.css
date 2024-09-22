@@ -1,9 +1,16 @@
-.container {
+.pageWrapper {
+  margin: auto;
   width: fit-content;
+}
+
+.header {
+  margin: 36px 0 24px 0;
+}
+
+.container {
   display: grid;
   grid-template-columns: 580px 580px;
   gap: 60px;
-  margin: auto;
 }
 
 .orderStatuses {
@@ -23,4 +30,15 @@
 
 .list {
   list-style: none;
+}
+
+.orders {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  height: 140px;
+}
+
+.readyOrders {
+  color: #00cccc;
 }

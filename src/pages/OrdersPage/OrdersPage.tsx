@@ -4,6 +4,8 @@ import { wsConnectionStart } from '../../services/store/slices/websocketSlice';
 import { WebsocketConfig } from '../../constants';
 import OrderCard from '../../components/OrderCard/OrderCard';
 
+import styles from './OrdersPage.module.css';
+
 const OrdersPage = () => {
   const dispatch = useAppDispatch();
   const messages = useAppSelector((store) => store.websocketSlice.messages);
@@ -28,10 +30,10 @@ const OrdersPage = () => {
   return (
     <main>
       {data && (
-        <ul>
-          {data.orders.map((item) => (
+        <ul className={styles.list}>
+          {Array.from(data.orders).reverse().map((item) => (
             <li key={item._id}>
-              <OrderCard order={item} />
+              <OrderCard showStatus order={item} />
             </li>
           ))}
         </ul>
