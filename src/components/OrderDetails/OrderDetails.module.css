@@ -74,7 +74,7 @@
 }
 
 .readyStatus {
-  color: #00cccc;
+  color: var(--color--ready);
 }
 
 .footer {
