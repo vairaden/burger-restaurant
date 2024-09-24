@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import {
   addIngredient,
   deleteIngredient,
-} from '../../services/store/slices/constructorSlice';
+} from '../../services/store/slices/burgerConstructorSlice';
 import { ConstructorIngredient, Ingredient } from '../../types';
 import {
   decreaseIngredientNumber,
@@ -37,11 +37,11 @@ export const BurgerConstructor = () => {
   const location = useLocation();
 
   const { ingredientsInBurger, bun } = useAppSelector(
-    (state) => state.constructorSlice
+    (state) => state.burgerConstructor
   );
-  const user = useAppSelector((state) => state.authSlice.user);
+  const user = useAppSelector((state) => state.auth.user);
   const { selectedOrder, loading: orderLoading } = useAppSelector(
-    (state) => state.ordersSlice
+    (state) => state.orders
   );
 
   const onDropHandler = ({ item }: DropParams) => {

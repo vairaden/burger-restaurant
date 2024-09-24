@@ -49,8 +49,3 @@ export interface User {
   email: string;
   name: string;
 }
-
-export interface WebsocketConfigType {
-  url: string;
-  needAuth: boolean;
-}

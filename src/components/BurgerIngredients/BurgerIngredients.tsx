@@ -19,7 +19,7 @@ export const BurgerIngredients = () => {
   const mainTabRef = useRef<HTMLParagraphElement>(null);
   const listContainerRef = useRef<HTMLDivElement>(null);
 
-  const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
+  const { ingredients } = useAppSelector((state) => state.ingredients);
 
   useEffect(() => {
     const bunTabElement = bunTabRef.current as HTMLParagraphElement;

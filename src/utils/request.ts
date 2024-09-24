@@ -16,7 +16,7 @@ const withAuthHeader = (opts?: RequestInit) => {
     ...opts,
     headers: {
       ...opts.headers,
-      Authorization: store.getState().authSlice.accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
   };
 

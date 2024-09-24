@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../services/store';
-import { wsConnectionStart } from '../../services/store/slices/websocketSlice';
-import { WebsocketConfig } from '../../constants';
+import { orderFeedActions } from '../../services/store/slices/orderFeedSlice';
+import { WebsocketUrl } from '../../constants';
 
 import styles from './FeedPage.module.css';
 import { OrderStatus } from '../../types';
@@ -10,8 +10,8 @@ import clsx from 'clsx';
 
 const FeedPage = () => {
   const dispatch = useAppDispatch();
-  const messages = useAppSelector((store) => store.websocketSlice.messages);
-  const loading = useAppSelector((store) => store.websocketSlice.loading);
+  const messages = useAppSelector((store) => store.orderFeed.messages);
+  const loading = useAppSelector((store) => store.orderFeed.loading);
 
   const data = useMemo(() => {
     if (loading) {
@@ -44,7 +44,11 @@ const FeedPage = () => {
   }, [data?.orders]);
 
   useEffect(() => {
-    dispatch(wsConnectionStart({ config: WebsocketConfig.ORDERS_ALL }));
+    dispatch(orderFeedActions.wsConnect(WebsocketUrl.ORDERS_ALL));
+
+    return () => {
+      dispatch(orderFeedActions.wsDisconnect());
+    };
   }, []);
 
   return (

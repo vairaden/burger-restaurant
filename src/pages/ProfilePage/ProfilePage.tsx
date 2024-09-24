@@ -14,14 +14,14 @@ import { useForm } from '../../hooks/useForm';
 
 const ProfilePage = () => {
   const { formValues, setFormValues, handleChange } = useForm(() => ({
-    name: store.getState().authSlice.user?.name || '',
-    email: store.getState().authSlice.user?.email || '',
+    name: store.getState().auth.user?.name || '',
+    email: store.getState().auth.user?.email || '',
     password: '',
   }));
 
   const dispatch = useAppDispatch();
 
-  const user = useAppSelector((state) => state.authSlice.user);
+  const user = useAppSelector((state) => state.auth.user);
 
   const fetchUserData = async () => {
     await dispatch(fetchUser());

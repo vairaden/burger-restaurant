@@ -22,7 +22,7 @@ const ResetPasswordPage = () => {
   });
 
   const emailCodeSent = useAppSelector(
-    (store) => store.passwordSlice.emailCodeSent
+    (store) => store.password.emailCodeSent
   );
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {

@@ -7,7 +7,7 @@ interface Props {
 }
 
 const ProtectedRouteElement = ({ protectFromAuthorized }: Props) => {
-  const user = useAppSelector((state) => state.authSlice.user);
+  const user = useAppSelector((state) => state.auth.user);
   const location = useLocation();
   const navigate = useNavigate();
   const [canDisplay, setCanDisplay] = useState(false);

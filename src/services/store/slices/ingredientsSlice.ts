@@ -100,4 +100,4 @@ export const {
   clearIngredients,
 } = ingredientsSlice.actions;
 
-export default ingredientsSlice.reducer;
+export default ingredientsSlice;

@@ -1,26 +1,55 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
 import ingredientsSlice from './slices/ingredientsSlice';
-import constructorSlice from './slices/constructorSlice';
 import ordersSlice from './slices/ordersSlice';
-import authSlice from './slices/authSlice';
+import authSlice, { refreshAccessToken } from './slices/authSlice';
 import passwordSlice from './slices/passwordSlice';
-import websocketSlice from './slices/websocketSlice';
-import { socketMiddleware } from './middleware/websocketMiddleware';
+import orderFeedSlice, { orderFeedActions } from './slices/orderFeedSlice';
+import { websocketMiddleware } from './middleware/websocketMiddleware';
+import burgerConstructorSlice from './slices/burgerConstructorSlice';
+import orderHistorySlice, { orderHistoryActions } from './slices/orderHistorySlice';
 
-const rootReducer = combineReducers({
+const rootReducer = combineSlices(
   ingredientsSlice,
-  constructorSlice,
+  burgerConstructorSlice,
   ordersSlice,
   authSlice,
   passwordSlice,
-  websocketSlice,
+  orderFeedSlice,
+  orderHistorySlice,
+);
+
+const orderFeedMiddleware = websocketMiddleware({
+  connect: orderFeedActions.wsConnect,
+  disconnect: orderFeedActions.wsDisconnect,
+  onClose: orderFeedActions.wsConnectionClosed,
+  onError: orderFeedActions.wsConnectionError,
+  onMessage: orderFeedActions.wsGetMessage,
+  sendMessage: orderFeedActions.wsSendMessage,
+  onOpen: orderFeedActions.wsConnectionSuccess,
+  onConnecting: orderFeedActions.wsConnectionStart,
+  refreshAccessToken,
 });
+
+const orderHistoryMiddleware = websocketMiddleware(
+  {
+    connect: orderHistoryActions.wsConnect,
+    disconnect: orderHistoryActions.wsDisconnect,
+    onClose: orderHistoryActions.wsConnectionClosed,
+    onError: orderHistoryActions.wsConnectionError,
+    onMessage: orderHistoryActions.wsGetMessage,
+    sendMessage: orderHistoryActions.wsSendMessage,
+    onOpen: orderHistoryActions.wsConnectionSuccess,
+    onConnecting: orderHistoryActions.wsConnectionStart,
+    refreshAccessToken,
+  },
+  true
+);
 
 export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(socketMiddleware),
+    getDefaultMiddleware().concat(orderFeedMiddleware, orderHistoryMiddleware),
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

@@ -8,7 +8,7 @@ import pageStyles from '../../styles/PageStyles.module.css';
 const IngredientPage = () => {
   const { id } = useParams();
 
-  const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
+  const { ingredients } = useAppSelector((state) => state.ingredients);
 
   const selectedIngredient = useMemo(() => {
     if (!id) {

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { OrderDetails, OrderInfo } from '../../../types';
 import { clearIngredients } from './ingredientsSlice';
-import { clearConstructor } from './constructorSlice';
+import { clearConstructor } from './burgerConstructorSlice';
 import { createOrderRequest } from '../../../api/orderApi';
 
 export interface OrdersState {
@@ -59,4 +59,4 @@ export const ordersSlice = createSlice({
 
 export const { clearSelectedOrder } = ordersSlice.actions;
 
-export default ordersSlice.reducer;
+export default ordersSlice;

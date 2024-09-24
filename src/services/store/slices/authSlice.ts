@@ -60,6 +60,8 @@ export const refreshAccessToken = createAsyncThunk<RefreshTokenRequestRes>(
   }
 );
 
+export type TRefreshAccessToken = typeof refreshAccessToken;
+
 export const fetchUser = createAsyncThunk<FetchUserRequestRes>(
   'auth/fetchUser',
   fetchUserRequest
@@ -186,4 +188,4 @@ export const authSlice = createSlice({
   },
 });
 
-export default authSlice.reducer;
+export default authSlice;

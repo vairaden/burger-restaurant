@@ -62,4 +62,4 @@ export const passwordSlice = createSlice({
   },
 });
 
-export default passwordSlice.reducer;
+export default passwordSlice;

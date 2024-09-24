@@ -17,7 +17,7 @@ const OrderCard = ({ order, showStatus = false }: Props) => {
   const navigate = useNavigate();
   const location = useLocation();
   const ingredients = useAppSelector(
-    (store) => store.ingredientsSlice.ingredients
+    (store) => store.ingredients.ingredients
   );
 
   const openOrderDetails = () => {

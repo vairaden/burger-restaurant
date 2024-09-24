@@ -9,7 +9,7 @@ const IngredientModal = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
+  const { ingredients } = useAppSelector((state) => state.ingredients);
 
   const selectedIngredient = useMemo(() => {
     if (!id) {
