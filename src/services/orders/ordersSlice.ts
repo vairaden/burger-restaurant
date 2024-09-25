@@ -3,9 +3,6 @@ import { OrderDetails, OrderInfo } from '../../types';
 import { clearIngredients } from '../ingredients/ingredientsSlice';
 import { clearConstructor } from '../burgerConstructior/burgerConstructorSlice';
 import { createOrderRequest } from '../../api/orderApi';
-import { RootState } from '../store';
-import orderFeedActions from '../orderFeed/orderFeedActions';
-import orderHistoryActions from '../orderHistory/orderHistoryActions';
 
 export interface OrdersState {
   selectedOrder: OrderInfo | null;

@@ -36,6 +36,7 @@ const OrderDetails = () => {
   const loading = useAppSelector(
     isFeed ? orderFeedLoading : orderHistoryLoading
   );
+
   const socketConnected = useAppSelector(
     isFeed ? orderFeedConnected : orderHistoryConnected
   );
@@ -122,7 +123,7 @@ const OrderDetails = () => {
         };
   }, []);
 
-  if (loading) {
+  if (loading && !order) {
     return (
       <div className={pageStyles.wrapper}>
         <Spinner />
