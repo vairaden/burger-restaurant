@@ -8,7 +8,7 @@ import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../services/store';
-import { sendResetEmail } from '../../services/store/slices/passwordSlice';
+import { sendResetEmail } from '../../services/password/passwordSlice';
 import { useForm } from '../../hooks/useForm';
 
 const ForgotPasswordPage = () => {

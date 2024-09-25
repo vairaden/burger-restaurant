@@ -1,29 +1,19 @@
 import { useEffect, useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../services/store';
-import { orderFeedActions } from '../../services/store/slices/orderFeedSlice';
 import { WebsocketUrl } from '../../constants';
 
 import styles from './FeedPage.module.css';
 import { OrderStatus } from '../../types';
 import OrderCard from '../../components/OrderCard/OrderCard';
 import clsx from 'clsx';
+import Spinner from '../../components/Spinner/Spinner';
+import { orderFeedData, orderFeedLoading } from '../../services/orderFeed/orderFeedSelectors';
+import orderFeedActions from '../../services/orderFeed/orderFeedActions';
 
 const FeedPage = () => {
   const dispatch = useAppDispatch();
-  const messages = useAppSelector((store) => store.orderFeed.messages);
-  const loading = useAppSelector((store) => store.orderFeed.loading);
-
-  const data = useMemo(() => {
-    if (loading) {
-      return null;
-    }
-
-    if (!messages[0]) {
-      return null;
-    }
-
-    return messages[0];
-  }, [messages, loading]);
+  const data = useAppSelector(orderFeedData);
+  const loading = useAppSelector(orderFeedLoading);
 
   const { ordersDone, ordersInProgress } = useMemo(() => {
     if (!data) {
@@ -41,7 +31,7 @@ const FeedPage = () => {
         .filter((item) => item.status !== OrderStatus.DONE)
         .slice(0, 10),
     };
-  }, [data?.orders]);
+  }, [data]);
 
   useEffect(() => {
     dispatch(orderFeedActions.wsConnect(WebsocketUrl.ORDERS_ALL));
@@ -50,6 +40,10 @@ const FeedPage = () => {
       dispatch(orderFeedActions.wsDisconnect());
     };
   }, []);
+
+  if (loading) {
+    <Spinner />;
+  }
 
   return (
     <main className={styles.pageWrapper}>

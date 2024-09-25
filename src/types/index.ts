@@ -49,3 +49,7 @@ export interface User {
   email: string;
   name: string;
 }
+
+export interface ReducedIngredient extends IngredientListItem {
+  count: number;
+}

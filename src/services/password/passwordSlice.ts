@@ -6,7 +6,7 @@ import {
   SendResetEmailRequestRes,
   SendResetEmailRequestOpts,
   sendResetEmailRequest,
-} from '../../../api/authApi';
+} from '../../api/authApi';
 
 export const resetPassword = createAsyncThunk<
   ResetPasswordRequestRes,

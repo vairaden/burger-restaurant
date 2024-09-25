@@ -10,7 +10,7 @@ import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../services/store';
-import { register } from '../../services/store/slices/authSlice';
+import { register } from '../../services/auth/authSlice';
 import { useForm } from '../../hooks/useForm';
 
 const RegisterPage = () => {

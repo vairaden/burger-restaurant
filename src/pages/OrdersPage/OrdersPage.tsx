@@ -1,27 +1,17 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { WebsocketUrl } from '../../constants';
 import OrderCard from '../../components/OrderCard/OrderCard';
 
 import styles from './OrdersPage.module.css';
-import { orderHistoryActions } from '../../services/store/slices/orderHistorySlice';
+import Spinner from '../../components/Spinner/Spinner';
+import { orderHistoryData, orderHistoryLoading } from '../../services/orderHistory/orderHistorySelectors';
+import orderHistoryActions from '../../services/orderHistory/orderHistoryActions';
 
 const OrdersPage = () => {
   const dispatch = useAppDispatch();
-  const messages = useAppSelector((store) => store.orderHistory.messages);
-  const loading = useAppSelector((store) => store.orderHistory.loading);
-
-  const data = useMemo(() => {
-    if (loading) {
-      return null;
-    }
-
-    if (!messages[0]) {
-      return null;
-    }
-
-    return messages[0];
-  }, [messages, loading]);
+  const data = useAppSelector(orderHistoryData);
+  const loading = useAppSelector(orderHistoryLoading);
 
   useEffect(() => {
     dispatch(orderHistoryActions.wsConnect(WebsocketUrl.ORDERS_PERSONAL));
@@ -30,6 +20,10 @@ const OrdersPage = () => {
       dispatch(orderHistoryActions.wsDisconnect());
     };
   }, []);
+
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <main>

@@ -11,7 +11,7 @@ import { useAppDispatch } from '../../services/store';
 import {
   moveIngredient,
   moveIngredientToBottom,
-} from '../../services/store/slices/burgerConstructorSlice';
+} from '../../services/burgerConstructior/burgerConstructorSlice';
 
 interface Props {
   item: Ingredient;

@@ -1,37 +1,45 @@
 import { useLocation, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { useEffect, useMemo } from 'react';
-import { orderFeedActions } from '../../services/store/slices/orderFeedSlice';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 
 import styles from './OrderDetails.module.css';
 import parseTime from '../../utils/parseTime';
 import clsx from 'clsx';
-import { IngredientListItem, OrderStatus } from '../../types';
+import { OrderStatus, ReducedIngredient } from '../../types';
 import { WebsocketUrl } from '../../constants';
-import { orderHistoryActions } from '../../services/store/slices/orderHistorySlice';
+import {
+  orderFeedConnected,
+  orderFeedData,
+  orderFeedLoading,
+} from '../../services/orderFeed/orderFeedSelectors';
+import {
+  orderHistoryConnected,
+  orderHistoryData,
+  orderHistoryLoading,
+} from '../../services/orderHistory/orderHistorySelectors';
+import orderFeedActions from '../../services/orderFeed/orderFeedActions';
+import orderHistoryActions from '../../services/orderHistory/orderHistoryActions';
+import Spinner from '../Spinner/Spinner';
 
-interface ReducedIngredient extends IngredientListItem {
-  count: number;
-}
+import pageStyles from '../../styles/PageStyles.module.css';
 
 const OrderDetails = () => {
   const { id } = useParams();
   const dispatch = useAppDispatch();
   const location = useLocation();
 
-  const isPersonal = location.pathname.startsWith('/profile/orders');
+  const isFeed = location.pathname.startsWith('/feed');
 
-  const messages = useAppSelector(
-    isPersonal
-      ? (store) => store.orderHistory.messages
-      : (store) => store.orderFeed.messages
-  );
+  const message = useAppSelector(isFeed ? orderFeedData : orderHistoryData);
+
   const loading = useAppSelector(
-    isPersonal
-      ? (store) => store.orderHistory.loading
-      : (store) => store.orderFeed.loading
+    isFeed ? orderFeedLoading : orderHistoryLoading
   );
+  const socketConnected = useAppSelector(
+    isFeed ? orderFeedConnected : orderHistoryConnected
+  );
+
   const ingredients = useAppSelector((store) => store.ingredients.ingredients);
 
   const order = useMemo(() => {
@@ -39,12 +47,12 @@ const OrderDetails = () => {
       return null;
     }
 
-    if (!messages[0]) {
+    if (!message) {
       return null;
     }
 
-    return messages[0].orders.find((item) => item._id === id) || null;
-  }, [loading, messages, id]);
+    return message.orders.find((item) => item._id === id) || null;
+  }, [loading, message, id]);
 
   const statusText = useMemo(() => {
     let status = '';
@@ -95,20 +103,32 @@ const OrderDetails = () => {
   }, [ingredients, order]);
 
   useEffect(() => {
-    if (isPersonal) {
-      dispatch(orderHistoryActions.wsConnect(WebsocketUrl.ORDERS_PERSONAL));
-    } else {
-      dispatch(orderFeedActions.wsConnect(WebsocketUrl.ORDERS_ALL));
+    if (socketConnected) {
+      return;
     }
 
-    return isPersonal
+    if (isFeed) {
+      dispatch(orderFeedActions.wsConnect(WebsocketUrl.ORDERS_ALL));
+    } else {
+      dispatch(orderHistoryActions.wsConnect(WebsocketUrl.ORDERS_PERSONAL));
+    }
+
+    return isFeed
       ? () => {
-          dispatch(orderHistoryActions.wsDisconnect());
+          dispatch(orderFeedActions.wsDisconnect());
         }
       : () => {
-          dispatch(orderFeedActions.wsDisconnect());
+          dispatch(orderHistoryActions.wsDisconnect());
         };
   }, []);
+
+  if (loading) {
+    return (
+      <div className={pageStyles.wrapper}>
+        <Spinner />
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrapper}>

@@ -1,8 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { OrderDetails, OrderInfo } from '../../../types';
-import { clearIngredients } from './ingredientsSlice';
-import { clearConstructor } from './burgerConstructorSlice';
-import { createOrderRequest } from '../../../api/orderApi';
+import { OrderDetails, OrderInfo } from '../../types';
+import { clearIngredients } from '../ingredients/ingredientsSlice';
+import { clearConstructor } from '../burgerConstructior/burgerConstructorSlice';
+import { createOrderRequest } from '../../api/orderApi';
+import { RootState } from '../store';
+import orderFeedActions from '../orderFeed/orderFeedActions';
+import orderHistoryActions from '../orderHistory/orderHistoryActions';
 
 export interface OrdersState {
   selectedOrder: OrderInfo | null;
@@ -22,9 +25,9 @@ export const createOrder = createAsyncThunk<
   OrderInfo,
   { ingredientIds: string[] }
 >('orders/createOrder', async ({ ingredientIds }, thunkAPI) => {
-  const order = await createOrderRequest({ingredients: ingredientIds});
+  const order = await createOrderRequest({ ingredients: ingredientIds });
 
-  thunkAPI.dispatch(clearIngredients())
+  thunkAPI.dispatch(clearIngredients());
   thunkAPI.dispatch(clearConstructor());
 
   return order;

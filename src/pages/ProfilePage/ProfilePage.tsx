@@ -9,7 +9,7 @@ import { FormEvent, useEffect, useMemo } from 'react';
 import pageStyles from '../../styles/PageStyles.module.css';
 
 import { store, useAppDispatch, useAppSelector } from '../../services/store';
-import { fetchUser, updateUser } from '../../services/store/slices/authSlice';
+import { fetchUser, updateUser } from '../../services/auth/authSlice';
 import { useForm } from '../../hooks/useForm';
 
 const ProfilePage = () => {

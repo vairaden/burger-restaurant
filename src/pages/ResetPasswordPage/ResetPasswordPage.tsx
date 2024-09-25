@@ -9,7 +9,7 @@ import { FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch, useAppSelector } from '../../services/store';
-import { resetPassword } from '../../services/store/slices/passwordSlice';
+import { resetPassword } from '../../services/password/passwordSlice';
 import { useForm } from '../../hooks/useForm';
 
 const ResetPasswordPage = () => {
