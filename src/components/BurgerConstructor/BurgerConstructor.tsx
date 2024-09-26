@@ -6,22 +6,22 @@ import { useMemo } from 'react';
 
 import styles from './BurgerConstructor.module.css';
 import { Modal } from '../Modal';
-import { OrderDetails } from '../OrderDetails';
+import { OrderCreatedInfo } from '../OrderCreatedInfo';
 import { useDrop } from 'react-dnd';
 import clsx from 'clsx';
 import {
   addIngredient,
   deleteIngredient,
-} from '../../services/store/constructorSlice';
+} from '../../services/burgerConstructior/burgerConstructorSlice';
 import { ConstructorIngredient, Ingredient } from '../../types';
 import {
   decreaseIngredientNumber,
   increaseIngredientNumber,
-} from '../../services/store/ingredientsSlice';
+} from '../../services/ingredients/ingredientsSlice';
 import {
   clearSelectedOrder,
   createOrder,
-} from '../../services/store/ordersSlice';
+} from '../../services/orders/ordersSlice';
 import ConstructorListItem from '../ConstructorListItem/ConstructorListItem';
 import { useAppDispatch, useAppSelector } from '../../services/store';
 import { createSearchParams, useLocation, useNavigate } from 'react-router-dom';
@@ -37,11 +37,11 @@ export const BurgerConstructor = () => {
   const location = useLocation();
 
   const { ingredientsInBurger, bun } = useAppSelector(
-    (state) => state.constructorSlice
+    (state) => state.burgerConstructor
   );
-  const user = useAppSelector((state) => state.authSlice.user);
+  const user = useAppSelector((state) => state.auth.user);
   const { selectedOrder, loading: orderLoading } = useAppSelector(
-    (state) => state.ordersSlice
+    (state) => state.orders
   );
 
   const onDropHandler = ({ item }: DropParams) => {
@@ -114,7 +114,7 @@ export const BurgerConstructor = () => {
       )}
       {selectedOrder && (
         <Modal onClose={onCloseOrderModal}>
-          <OrderDetails orderInfo={selectedOrder} />
+          <OrderCreatedInfo orderInfo={selectedOrder} />
         </Modal>
       )}
 

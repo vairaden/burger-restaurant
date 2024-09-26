@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
-  resetPasswordRequest,
-  ResetPasswordRequestOpts,
   ResetPasswordRequestRes,
-  sendResetEmailRequest,
-  SendResetEmailRequestOpts,
+  ResetPasswordRequestOpts,
+  resetPasswordRequest,
   SendResetEmailRequestRes,
+  SendResetEmailRequestOpts,
+  sendResetEmailRequest,
 } from '../../api/authApi';
 
 export const resetPassword = createAsyncThunk<
@@ -62,4 +62,4 @@ export const passwordSlice = createSlice({
   },
 });
 
-export default passwordSlice.reducer;
+export default passwordSlice;

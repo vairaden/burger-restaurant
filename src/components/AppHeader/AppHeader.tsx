@@ -30,7 +30,7 @@ export const AppHeader = () => {
               </>
             )}
           </NavLink>
-          <NavLink to="/orders" className={styles.navButton}>
+          <NavLink to="/feed" className={styles.navButton}>
             {({ isActive }) => (
               <>
                 <ListIcon type={isActive ? 'primary' : 'secondary'} />

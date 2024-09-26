@@ -1,6 +1,6 @@
 import { API_URL } from '../constants';
 import { store } from '../services/store';
-import { refreshAccessToken } from '../services/store/authSlice';
+import { refreshAccessToken } from '../services/auth/authSlice';
 import checkResponse from './checkResponse';
 
 interface ApiRequest {
@@ -16,7 +16,7 @@ const withAuthHeader = (opts?: RequestInit) => {
     ...opts,
     headers: {
       ...opts.headers,
-      Authorization: store.getState().authSlice.accessToken,
+      Authorization: store.getState().auth.accessToken,
     },
   };
 

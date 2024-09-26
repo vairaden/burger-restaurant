@@ -9,7 +9,7 @@ import { FormEvent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useAppDispatch, useAppSelector } from '../../services/store';
-import { resetPassword } from '../../services/store/passwordSlice';
+import { resetPassword } from '../../services/password/passwordSlice';
 import { useForm } from '../../hooks/useForm';
 
 const ResetPasswordPage = () => {
@@ -22,7 +22,7 @@ const ResetPasswordPage = () => {
   });
 
   const emailCodeSent = useAppSelector(
-    (store) => store.passwordSlice.emailCodeSent
+    (store) => store.password.emailCodeSent
   );
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {

@@ -3,18 +3,18 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { ConstructorIngredient } from '../../types';
 import { v4 as uuid } from 'uuid';
 
-export interface ConstructorState {
+export interface BurgerConstructorState {
   bun: ConstructorIngredient | null;
   ingredientsInBurger: ConstructorIngredient[];
 }
 
-const initialState: ConstructorState = {
+const initialState: BurgerConstructorState = {
   bun: null,
   ingredientsInBurger: [],
 };
 
-export const constructorSlice = createSlice({
-  name: 'constructor',
+export const burgerConstructorSlice = createSlice({
+  name: 'burgerConstructor',
   initialState,
   reducers: {
     addIngredient: {
@@ -97,6 +97,6 @@ export const {
   moveIngredient,
   clearConstructor,
   moveIngredientToBottom,
-} = constructorSlice.actions;
+} = burgerConstructorSlice.actions;
 
-export default constructorSlice.reducer;
+export default burgerConstructorSlice;

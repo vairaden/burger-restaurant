@@ -4,7 +4,7 @@ import { getIngredients } from '../../api/getIngredients';
 import { Ingredient, IngredientListItem } from '../../types';
 
 export interface IngredientsState {
-  ingredients: IngredientListItem[];
+  ingredients: Record<string, IngredientListItem>;
   selectedBunId: string | null;
   selectedIngredient: Ingredient | null;
   loading: boolean;
@@ -12,7 +12,7 @@ export interface IngredientsState {
 }
 
 const initialState: IngredientsState = {
-  ingredients: [],
+  ingredients: {},
   selectedBunId: null,
   selectedIngredient: null,
   loading: false,
@@ -34,21 +34,13 @@ export const ingredientsSlice = createSlice({
     ) => {
       if (payload.item.type === 'bun') {
         if (state.selectedBunId) {
-          state.ingredients[
-            state.ingredients.findIndex(
-              (item) => item._id === state.selectedBunId
-            )
-          ].numberInConstructor = 0;
+          state.ingredients[state.selectedBunId].numberInConstructor = 0;
         }
         state.selectedBunId = payload.item._id;
 
-        state.ingredients[
-          state.ingredients.findIndex((item) => item._id === payload.item._id)
-        ].numberInConstructor = 2;
+        state.ingredients[payload.item._id].numberInConstructor = 2;
       } else {
-        state.ingredients[
-          state.ingredients.findIndex((item) => item._id === payload.item._id)
-        ].numberInConstructor++;
+        state.ingredients[payload.item._id].numberInConstructor++;
       }
     },
     decreaseIngredientNumber: (
@@ -56,9 +48,7 @@ export const ingredientsSlice = createSlice({
       { payload }: PayloadAction<{ item: Ingredient }>
     ) => {
       if (payload.item.type !== 'bun') {
-        state.ingredients[
-          state.ingredients.findIndex((item) => item._id === payload.item._id)
-        ].numberInConstructor--;
+        state.ingredients[payload.item._id].numberInConstructor--;
       }
     },
     setSelectedIngredient: (
@@ -68,8 +58,8 @@ export const ingredientsSlice = createSlice({
       state.selectedIngredient = payload.item;
     },
     clearIngredients: (state) => {
-      for (const item of state.ingredients) {
-        item.numberInConstructor = 0;
+      for (const key of Object.keys(state.ingredients)) {
+        state.ingredients[key].numberInConstructor = 0;
       }
       state.selectedBunId = null;
     },
@@ -81,10 +71,16 @@ export const ingredientsSlice = createSlice({
         state.loading = true;
       })
       .addCase(fetchIngredientsList.fulfilled, (state, action) => {
-        state.ingredients = action.payload.map((item) => ({
-          ...item,
-          numberInConstructor: 0,
-        }));
+        const ingredients: Record<string, IngredientListItem> = {};
+        action.payload.forEach(
+          (item) =>
+            (ingredients[item._id] = {
+              ...item,
+              numberInConstructor: 0,
+            })
+        );
+
+        state.ingredients = ingredients;
 
         state.loading = false;
       })
@@ -104,4 +100,4 @@ export const {
   clearIngredients,
 } = ingredientsSlice.actions;
 
-export default ingredientsSlice.reducer;
+export default ingredientsSlice;

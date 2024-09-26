@@ -14,7 +14,7 @@ import {
   UpdateUserRequestOpts,
   UpdateUserRequestRes,
 } from '../../api/authApi';
-import { RootState } from '.';
+import { RootState } from '../store';
 import { User } from '../../types';
 import {
   refreshTokenRequest,
@@ -59,6 +59,8 @@ export const refreshAccessToken = createAsyncThunk<RefreshTokenRequestRes>(
     return await refreshTokenRequest({ token });
   }
 );
+
+export type TRefreshAccessToken = typeof refreshAccessToken;
 
 export const fetchUser = createAsyncThunk<FetchUserRequestRes>(
   'auth/fetchUser',
@@ -186,4 +188,4 @@ export const authSlice = createSlice({
   },
 });
 
-export default authSlice.reducer;
+export default authSlice;

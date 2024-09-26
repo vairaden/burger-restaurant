@@ -9,7 +9,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import pageStyles from '../../styles/PageStyles.module.css';
 import clsx from 'clsx';
 import { useAppDispatch } from '../../services/store';
-import { fetchUser, login } from '../../services/store/authSlice';
+import { fetchUser, login } from '../../services/auth/authSlice';
 import Spinner from '../../components/Spinner/Spinner';
 import { useForm } from '../../hooks/useForm';
 

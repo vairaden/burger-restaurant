@@ -8,10 +8,14 @@ import pageStyles from '../../styles/PageStyles.module.css';
 const IngredientPage = () => {
   const { id } = useParams();
 
-  const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
+  const { ingredients } = useAppSelector((state) => state.ingredients);
 
   const selectedIngredient = useMemo(() => {
-    return ingredients.find((item) => item._id === id);
+    if (!id) {
+      return undefined;
+    }
+
+    return ingredients[id];
   }, [id, ingredients]);
 
   return (

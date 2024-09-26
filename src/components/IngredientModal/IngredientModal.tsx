@@ -9,10 +9,14 @@ const IngredientModal = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { ingredients } = useAppSelector((state) => state.ingredientsSlice);
+  const { ingredients } = useAppSelector((state) => state.ingredients);
 
   const selectedIngredient = useMemo(() => {
-    return ingredients.find((item) => item._id === id);
+    if (!id) {
+      return undefined;
+    }
+
+    return ingredients[id];
   }, [id, ingredients]);
 
   if (!selectedIngredient) {
@@ -21,7 +25,7 @@ const IngredientModal = () => {
 
   const onClose = () => {
     navigate(location.state.background || '/');
-  }
+  };
 
   return (
     <Modal onClose={onClose}>

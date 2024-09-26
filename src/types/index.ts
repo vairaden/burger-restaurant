@@ -28,7 +28,28 @@ export interface OrderInfo {
   };
 }
 
+export const enum OrderStatus {
+  CREATED = 'created',
+  PENDING = 'pending',
+  DONE = 'done',
+  CANCELED = 'canceled',
+}
+
+export interface OrderDetails {
+  ingredients: string[];
+  _id: string;
+  status: OrderStatus;
+  number: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface User {
   email: string;
   name: string;
+}
+
+export interface ReducedIngredient extends IngredientListItem {
+  count: number;
 }
