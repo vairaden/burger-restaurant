@@ -24,7 +24,7 @@ export interface PasswordState {
   error: boolean;
 }
 
-const initialState: PasswordState = {
+export const passwordInitialState: PasswordState = {
   emailCodeSent: false,
   loading: false,
   error: false,
@@ -32,7 +32,7 @@ const initialState: PasswordState = {
 
 export const passwordSlice = createSlice({
   name: 'password',
-  initialState,
+  initialState: passwordInitialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -61,5 +61,3 @@ export const passwordSlice = createSlice({
       });
   },
 });
-
-export default passwordSlice;

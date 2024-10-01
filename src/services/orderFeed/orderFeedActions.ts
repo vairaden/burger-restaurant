@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import orderFeedSlice from './orderFeedSlice';
+import { orderFeedSlice } from './orderFeedSlice';
 
 const wsConnect = createAction<string>('orderFeed/connect');
 const wsDisconnect = createAction('orderFeed/disconnect');

@@ -73,14 +73,12 @@ export const updateUser = createAsyncThunk<
 >('auth/updateUser', updateUserRequest);
 
 export interface AuthState {
-  accessToken: string;
   user: null | User;
   loading: boolean;
   error: boolean;
 }
 
-const initialState: AuthState = {
-  accessToken: '',
+export const authInitialState: AuthState = {
   user: null,
   loading: false,
   error: false,
@@ -88,7 +86,7 @@ const initialState: AuthState = {
 
 export const authSlice = createSlice({
   name: 'auth',
-  initialState,
+  initialState: authInitialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -100,8 +98,8 @@ export const authSlice = createSlice({
         state.loading = false;
 
         state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
 
+        localStorage.setItem('accessToken', action.payload.accessToken);
         localStorage.setItem('refreshToken', action.payload.refreshToken);
       })
       .addCase(register.rejected, (state) => {
@@ -114,8 +112,8 @@ export const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.user = action.payload.user;
-        state.accessToken = action.payload.accessToken;
 
+        localStorage.setItem('accessToken', action.payload.accessToken);
         localStorage.setItem('refreshToken', action.payload.refreshToken);
 
         state.loading = false;
@@ -131,8 +129,9 @@ export const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(logout.fulfilled, () => {
+        localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        return initialState;
+        return authInitialState;
       })
       .addCase(logout.rejected, (state) => {
         state.error = true;
@@ -145,15 +144,15 @@ export const authSlice = createSlice({
         state.loading = true;
       })
       .addCase(refreshAccessToken.fulfilled, (state, action) => {
-        state.accessToken = action.payload.accessToken;
-
+        localStorage.setItem('accessToken', action.payload.accessToken);
         localStorage.setItem('refreshToken', action.payload.refreshToken);
 
         state.loading = false;
       })
       .addCase(refreshAccessToken.rejected, () => {
+        localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        return initialState;
+        return authInitialState;
       })
       .addCase(fetchUser.pending, (state) => {
         state.error = false;
@@ -187,5 +186,3 @@ export const authSlice = createSlice({
       });
   },
 });
-
-export default authSlice;

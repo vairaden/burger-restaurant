@@ -11,7 +11,7 @@ export interface IngredientsState {
   error: boolean;
 }
 
-const initialState: IngredientsState = {
+export const ingredientsInitialState: IngredientsState = {
   ingredients: {},
   selectedBunId: null,
   selectedIngredient: null,
@@ -26,7 +26,7 @@ export const fetchIngredientsList = createAsyncThunk(
 
 export const ingredientsSlice = createSlice({
   name: 'ingredients',
-  initialState,
+  initialState: ingredientsInitialState,
   reducers: {
     increaseIngredientNumber: (
       state,
@@ -86,7 +86,7 @@ export const ingredientsSlice = createSlice({
       })
       .addCase(fetchIngredientsList.rejected, () => {
         return {
-          ...initialState,
+          ...ingredientsInitialState,
           error: true,
         };
       });
@@ -99,5 +99,3 @@ export const {
   setSelectedIngredient,
   clearIngredients,
 } = ingredientsSlice.actions;
-
-export default ingredientsSlice;

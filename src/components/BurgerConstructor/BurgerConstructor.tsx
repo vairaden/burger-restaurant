@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import {
   addIngredient,
   deleteIngredient,
-} from '../../services/burgerConstructior/burgerConstructorSlice';
+} from '../../services/burgerConstructor/burgerConstructorSlice';
 import { ConstructorIngredient, Ingredient } from '../../types';
 import {
   decreaseIngredientNumber,

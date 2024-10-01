@@ -1,5 +1,5 @@
 import { createAction } from '@reduxjs/toolkit';
-import orderHistorySlice from './orderHistorySlice';
+import { orderHistorySlice } from './orderHistorySlice';
 
 const wsConnect = createAction<string>('orderHistory/connect');
 const wsDisconnect = createAction('orderHistory/disconnect');
