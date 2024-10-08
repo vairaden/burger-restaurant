@@ -124,6 +124,7 @@ export const BurgerConstructor = () => {
             [styles.ingredientListHovered]: isHover,
           })}
           ref={dropRef}
+          data-test-id="constructor-area"
         >
           {bun && <ConstructorListItem locked item={bun} type="top" />}
 

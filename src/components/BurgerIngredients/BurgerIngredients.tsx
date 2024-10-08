@@ -85,11 +85,11 @@ export const BurgerIngredients = () => {
         </Tab>
       </div>
 
-      <div className={styles.ingredientsSection} ref={listContainerRef}>
+      <div className={styles.ingredientsSection} ref={listContainerRef} data-test-id="ingredients">
         <p className="text text_type_main-medium mt-10" ref={bunTabRef}>
           Булки
         </p>
-        <ul className={styles.ingredientsList}>
+        <ul className={styles.ingredientsList} data-test-id="buns-list">
           {Object.values(ingredients)
             .filter((item) => item.type === 'bun')
             .map((item) => (
@@ -100,7 +100,7 @@ export const BurgerIngredients = () => {
         <p className="text text_type_main-medium mt-10" ref={sauceTabRef}>
           Соусы
         </p>
-        <ul className={styles.ingredientsList}>
+        <ul className={styles.ingredientsList} data-test-id="sauce-list">
           {Object.values(ingredients)
             .filter((item) => item.type === 'sauce')
             .map((item) => (
@@ -111,7 +111,7 @@ export const BurgerIngredients = () => {
         <p className="text text_type_main-medium mt-10" ref={mainTabRef}>
           Начинки
         </p>
-        <ul className={styles.ingredientsList}>
+        <ul className={styles.ingredientsList} data-test-id="ingredients-list">
           {Object.values(ingredients)
             .filter((item) => item.type === 'main')
             .map((item) => (
