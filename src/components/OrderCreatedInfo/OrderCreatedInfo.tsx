@@ -9,7 +9,7 @@ interface Props {
 
 export const OrderCreatedInfo = ({ orderInfo }: Props) => {
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} data-test-id="create-order-info">
       <p className="text text_type_digits-large pt-25">
         {orderInfo.order.number}
       </p>

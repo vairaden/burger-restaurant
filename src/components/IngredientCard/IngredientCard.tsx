@@ -32,6 +32,7 @@ export const IngredientCard = ({ item }: Props) => {
       ref={dragRef}
       className={styles.ingredientCard}
       onClick={openIngredientDetails}
+      data-test-ingredient-id={item._id}
     >
       {!!item.numberInConstructor && (
         <Counter count={item.numberInConstructor} size="default" />

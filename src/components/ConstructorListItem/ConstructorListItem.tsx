@@ -92,6 +92,7 @@ const ConstructorListItem = ({
             return;
         }
       }}
+      data-test-ingredient-id={item._id}
       className={clsx(styles.listItemContent, {
         'mt-4': type !== 'top',
         [styles.listItemHovered]: isHover,

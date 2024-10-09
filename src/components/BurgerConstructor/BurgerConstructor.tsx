@@ -146,7 +146,8 @@ export const BurgerConstructor = () => {
             <CurrencyIcon type="primary" />
           </div>
           <Button
-            htmlType="button"
+          data-test-id="create-order-button"
+          htmlType="button"
             type="primary"
             size="medium"
             onClick={onCreateOrder}

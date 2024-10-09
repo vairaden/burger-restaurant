@@ -31,7 +31,7 @@ export const Modal = ({ children, onClose }: Props) => {
     <ModalOverlay onClose={onClose}>
       <div className={styles.modalPanel} onClick={(e) => e.stopPropagation()}>
         {onClose && (
-          <button className={styles.closeButton} onClick={onClose}>
+          <button className={styles.closeButton} onClick={onClose} data-test-id="modal-close-button">
             <CloseIcon type="primary" />
           </button>
         )}

@@ -8,7 +8,7 @@ export interface Props {
 export const IngredientDetails = ({ ingredient }: Props) => {
   return (
     <>
-      <div className={styles.container}>
+      <div className={styles.container} data-test-id="ingredient-details" data-test-ingredient-id={ingredient._id}>
         <p className="text text_type_main-large pt-10 ml-10 mr-10">
           Детали ингедиента
         </p>
