@@ -152,7 +152,7 @@ export const authSlice = createSlice({
       .addCase(refreshAccessToken.rejected, () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        return authInitialState;
+        return { ...authInitialState, error: true };
       })
       .addCase(fetchUser.pending, (state) => {
         state.error = false;

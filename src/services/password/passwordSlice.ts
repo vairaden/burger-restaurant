@@ -45,12 +45,11 @@ export const passwordSlice = createSlice({
       })
       .addCase(resetPassword.rejected, (state) => {
         state.loading = false;
+        state.error = true;
       })
       .addCase(sendResetEmail.pending, (state) => {
         state.error = false;
-
         state.emailCodeSent = true;
-
         state.loading = true;
       })
       .addCase(sendResetEmail.fulfilled, (state) => {
@@ -58,6 +57,7 @@ export const passwordSlice = createSlice({
       })
       .addCase(sendResetEmail.rejected, (state) => {
         state.loading = false;
+        state.error = true;
       });
   },
 });

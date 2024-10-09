@@ -14,9 +14,7 @@ import createMockStore from 'redux-mock-store';
 
 const middlewares = [thunk];
 
-const mockStore = createMockStore<RootState, AppDispatch>(
-  middlewares as any
-);
+const mockStore = createMockStore<RootState, AppDispatch>(middlewares as any);
 
 const reducer = ordersSlice.reducer;
 
@@ -70,39 +68,34 @@ describe('Orders reducer', () => {
     expect(reduceActionHistory(store.getActions())).toEqual(expectedActions);
   });
 
-  it('handles createOrder error', async () => {
-    fetchMock.post('path:/api/orders', {
-      body: {
-        success: false,
-      },
-      headers: { 'content-type': 'application/json' },
+  it('should return state without created order when createOrder succeeds', () => {
+    expect(
+      reducer(undefined, {
+        type: createOrder.fulfilled.type,
+        payload: { name: 'test', order: { number: 123 } },
+      })
+    ).toEqual({
+      ...ordersInitialState,
+      selectedOrder: { name: 'test', order: { number: 123 } },
     });
-
-    const expectedActions = [
-      {
-        type: createOrder.pending.type,
-      },
-      {
-        type: createOrder.rejected.type,
-      },
-    ];
-
-    const store = mockStore();
-    await store.dispatch(createOrder({ ingredientIds: ['123'] }));
-
-    expect(reduceActionHistory(store.getActions())).toEqual(expectedActions);
   });
 
-  it('handles clearSelectedOrder', async () => {
-    const expectedActions = [
-      {
-        type: clearSelectedOrder.type,
-      },
-    ];
+  it('should return state with error when createOrder fails', () => {
+    expect(reducer(undefined, { type: createOrder.rejected.type })).toEqual({
+      ...ordersInitialState,
+      error: true,
+    });
+  });
 
-    const store = mockStore();
-    await store.dispatch(clearSelectedOrder());
-
-    expect(reduceActionHistory(store.getActions())).toEqual(expectedActions);
+  it('should clear selected order', () => {
+    expect(
+      reducer(
+        {
+          ...ordersInitialState,
+          selectedOrder: { name: 'test', order: { number: 123 } },
+        },
+        clearSelectedOrder()
+      )
+    ).toEqual(ordersInitialState);
   });
 });

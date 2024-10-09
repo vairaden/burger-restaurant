@@ -1,22 +1,38 @@
-import fetchMock from 'fetch-mock';
-import reduceActionHistory from '../../helpers/reduceActionHistory';
 import {
+  addIngredient,
   burgerConstructorInitialState,
   burgerConstructorSlice,
+  clearConstructor,
+  deleteIngredient,
+  moveIngredient,
+  moveIngredientToBottom,
 } from './burgerConstructorSlice';
-import { thunk } from 'redux-thunk';
-import createMockStore from 'redux-mock-store';
-import { AppDispatch, RootState } from '../store';
+import { v4 as uuid } from 'uuid';
 
-const middlewares = [thunk];
+jest.mock('uuid');
 
-const mockStore = createMockStore<RootState, AppDispatch>(middlewares as any);
+const mockUuid = uuid as jest.Mock;
 
 const reducer = burgerConstructorSlice.reducer;
 
+const testIngredient = {
+  _id: 'testId',
+  name: 'testName',
+  type: 'testType',
+  proteins: 1,
+  fat: 2,
+  carbohydrates: 3,
+  calories: 4,
+  price: 5,
+  image: 'testImage',
+  image_mobile: 'testImageMobile',
+  image_large: 'testImageLarge',
+  __v: 6,
+};
+
 describe('Burger constructor reducer', () => {
   afterEach(() => {
-    fetchMock.restore();
+    mockUuid.mockReset();
   });
 
   it('returns initial state', () => {
@@ -28,163 +44,111 @@ describe('Burger constructor reducer', () => {
     expect(state).toEqual(burgerConstructorInitialState);
   });
 
-  // it('handles addIngredient action', async () => {
-  //   const res = {
-  //     success: true,
-  //   };
+  it('handles addIngredient', () => {
+    mockUuid.mockReturnValue('123');
 
-  //   fetchMock.post('path:/api/password-reset/reset', {
-  //     body: res,
-  //     headers: { 'content-type': 'application/json' },
-  //   });
+    expect(reducer(undefined, addIngredient({ item: testIngredient }))).toEqual(
+      {
+        ...burgerConstructorInitialState,
+        ingredientsInBurger: [{ ...testIngredient, constructorId: '123' }],
+      }
+    );
+  });
 
-  //   const expectedActions = [
-  //     // {
-  //     //   type: resetPassword.pending.type,
-  //     // },
-  //     // {
-  //     //   type: resetPassword.fulfilled.type,
-  //     //   payload: res,
-  //     // },
-  //   ];
+  it('add bun', () => {
+    const testBun = { ...testIngredient, type: 'bun' };
+    mockUuid.mockReturnValue('123');
 
-  //   const store = mockStore();
-  //   await store
-  //     .dispatch
-  //     // resetPassword({
-  //     //   password: 'password',
-  //     //   token: 'token',
-  //     // })
-  //     ();
+    expect(reducer(undefined, addIngredient({ item: testBun }))).toEqual({
+      ...burgerConstructorInitialState,
+      bun: { ...testBun, constructorId: '123' },
+    });
+  });
 
-  //   expect(reduceActionHistory(store.getActions())).toEqual(expectedActions);
-  // });
+  it('handles deleteIngredient', () => {
+    expect(
+      reducer(
+        {
+          ...burgerConstructorInitialState,
+          ingredientsInBurger: [
+            { ...testIngredient, constructorId: '1' },
+            { ...testIngredient, constructorId: '2' },
+            { ...testIngredient, constructorId: '3' },
+          ],
+        },
+        deleteIngredient({ item: { ...testIngredient, constructorId: '2' } })
+      )
+    ).toEqual({
+      ...burgerConstructorInitialState,
+      ingredientsInBurger: [
+        { ...testIngredient, constructorId: '1' },
+        { ...testIngredient, constructorId: '3' },
+      ],
+    });
+  });
 
-  // it('handles deleteIngredient action', async () => {
-  //   const res = {
-  //     success: true,
-  //   };
+  it('handles moveIngredient', () => {
+    expect(
+      reducer(
+        {
+          ...burgerConstructorInitialState,
+          ingredientsInBurger: [
+            { ...testIngredient, constructorId: '1' },
+            { ...testIngredient, constructorId: '2' },
+            { ...testIngredient, constructorId: '3' },
+          ],
+        },
 
-  //   fetchMock.post('path:/api/password-reset/reset', {
-  //     body: res,
-  //     headers: { 'content-type': 'application/json' },
-  //   });
+        moveIngredient({ itemId: '1', targetId: '3' })
+      )
+    ).toEqual({
+      ...burgerConstructorInitialState,
+      ingredientsInBurger: [
+        { ...testIngredient, constructorId: '2' },
+        { ...testIngredient, constructorId: '1' },
+        { ...testIngredient, constructorId: '3' },
+      ],
+    });
+  });
 
-  //   const expectedActions = [
-  //     // {
-  //     //   type: resetPassword.pending.type,
-  //     // },
-  //     // {
-  //     //   type: resetPassword.fulfilled.type,
-  //     //   payload: res,
-  //     // },
-  //   ];
+  it('handles clearConstructor', () => {
+    expect(
+      reducer(
+        {
+          ...burgerConstructorInitialState,
+          ingredientsInBurger: [
+            { ...testIngredient, constructorId: '1' },
+            { ...testIngredient, constructorId: '2' },
+            { ...testIngredient, constructorId: '3' },
+          ],
+        },
+        clearConstructor()
+      )
+    ).toEqual({
+      ...burgerConstructorInitialState,
+    });
+  });
 
-  //   const store = mockStore();
-  //   await store
-  //     .dispatch
-  //     // resetPassword({
-  //     //   password: 'password',
-  //     //   token: 'token',
-  //     // })
-  //     ();
-
-  //   expect(reduceActionHistory(store.getActions())).toEqual(expectedActions);
-  // });
-
-  // it('handles moveIngredient action', async () => {
-  //   const res = {
-  //     success: true,
-  //   };
-
-  //   fetchMock.post('path:/api/password-reset/reset', {
-  //     body: res,
-  //     headers: { 'content-type': 'application/json' },
-  //   });
-
-  //   const expectedActions = [
-  //     // {
-  //     //   type: resetPassword.pending.type,
-  //     // },
-  //     // {
-  //     //   type: resetPassword.fulfilled.type,
-  //     //   payload: res,
-  //     // },
-  //   ];
-
-  //   const store = mockStore();
-  //   await store
-  //     .dispatch
-  //     // resetPassword({
-  //     //   password: 'password',
-  //     //   token: 'token',
-  //     // })
-  //     ();
-
-  //   expect(reduceActionHistory(store.getActions())).toEqual(expectedActions);
-  // });
-
-  // it('handles clearConstructor action', async () => {
-  //   const res = {
-  //     success: true,
-  //   };
-
-  //   fetchMock.post('path:/api/password-reset/reset', {
-  //     body: res,
-  //     headers: { 'content-type': 'application/json' },
-  //   });
-
-  //   const expectedActions = [
-  //     // {
-  //     //   type: resetPassword.pending.type,
-  //     // },
-  //     // {
-  //     //   type: resetPassword.fulfilled.type,
-  //     //   payload: res,
-  //     // },
-  //   ];
-
-  //   const store = mockStore();
-  //   await store
-  //     .dispatch
-  //     // resetPassword({
-  //     //   password: 'password',
-  //     //   token: 'token',
-  //     // })
-  //     ();
-
-  //   expect(reduceActionHistory(store.getActions())).toEqual(expectedActions);
-  // });
-
-  // it('handles moveIngredientToBottom action', async () => {
-  //   const res = {
-  //     success: true,
-  //   };
-
-  //   fetchMock.post('path:/api/password-reset/reset', {
-  //     body: res,
-  //     headers: { 'content-type': 'application/json' },
-  //   });
-
-  //   const expectedActions = [
-  //     // {
-  //     //   type: resetPassword.pending.type,
-  //     // },
-  //     // {
-  //     //   type: resetPassword.fulfilled.type,
-  //     //   payload: res,
-  //     // },
-  //   ];
-
-  //   const store = mockStore();
-  //   await store
-  //     .dispatch
-  //     // resetPassword({
-  //     //   password: 'password',
-  //     //   token: 'token',
-  //     // })
-  //     ();
-
-  //   expect(reduceActionHistory(store.getActions())).toEqual(expectedActions);
-  // });
+  it('handles moveIngredientToBottom', () => {
+    expect(
+      reducer(
+        {
+          ...burgerConstructorInitialState,
+          ingredientsInBurger: [
+            { ...testIngredient, constructorId: '1' },
+            { ...testIngredient, constructorId: '2' },
+            { ...testIngredient, constructorId: '3' },
+          ],
+        },
+        moveIngredientToBottom({ itemId: '1' })
+      )
+    ).toEqual({
+      ...burgerConstructorInitialState,
+      ingredientsInBurger: [
+        { ...testIngredient, constructorId: '2' },
+        { ...testIngredient, constructorId: '3' },
+        { ...testIngredient, constructorId: '1' },
+      ],
+    });
+  });
 });

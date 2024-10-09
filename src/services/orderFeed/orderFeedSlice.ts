@@ -19,7 +19,7 @@ interface InitialState {
 export const orderFeedInitialState: InitialState = {
   wsConnected: false,
   data: null,
-  loading: true,
+  loading: false,
   error: null,
 };
 
