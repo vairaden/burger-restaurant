@@ -16,17 +16,16 @@ interface InitialState {
   loading: boolean;
 }
 
-const initialState: InitialState = {
+export const orderHistoryInitialState: InitialState = {
   wsConnected: false,
   data: null,
-  loading: true,
+  loading: false,
   error: null,
 };
 
-
 export const orderHistorySlice = createSlice({
   name: 'orderHistory',
-  initialState,
+  initialState: orderHistoryInitialState,
   reducers: {
     wsConnectionStart: (state) => {
       state.error = null;
@@ -57,5 +56,3 @@ export const orderHistorySlice = createSlice({
     wsSendMessage: () => {},
   },
 });
-
-export default orderHistorySlice;

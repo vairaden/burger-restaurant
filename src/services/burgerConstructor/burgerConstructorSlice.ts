@@ -8,14 +8,14 @@ export interface BurgerConstructorState {
   ingredientsInBurger: ConstructorIngredient[];
 }
 
-const initialState: BurgerConstructorState = {
+export const burgerConstructorInitialState: BurgerConstructorState = {
   bun: null,
   ingredientsInBurger: [],
 };
 
 export const burgerConstructorSlice = createSlice({
   name: 'burgerConstructor',
-  initialState,
+  initialState: burgerConstructorInitialState,
   reducers: {
     addIngredient: {
       reducer: (
@@ -98,5 +98,3 @@ export const {
   clearConstructor,
   moveIngredientToBottom,
 } = burgerConstructorSlice.actions;
-
-export default burgerConstructorSlice;

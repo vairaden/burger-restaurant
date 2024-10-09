@@ -1,7 +1,7 @@
 import { API_URL } from '../constants';
-import { store } from '../services/store';
 import { refreshAccessToken } from '../services/auth/authSlice';
 import checkResponse from './checkResponse';
+import { refreshTokenRequest } from '../api/authApi/refreshTokenRequest';
 
 interface ApiRequest {
   success: boolean;
@@ -16,7 +16,7 @@ const withAuthHeader = (opts?: RequestInit) => {
     ...opts,
     headers: {
       ...opts.headers,
-      Authorization: store.getState().auth.accessToken,
+      Authorization: localStorage.getItem('accessToken') || '',
     },
   };
 
@@ -34,7 +34,13 @@ const request = async <T>(
     return await res.json();
   }
 
-  await store.dispatch(refreshAccessToken());
+  const token = localStorage.getItem('refreshToken');
+  if (!token) {
+    return await res.json();
+  }
+  const { accessToken, refreshToken } = await refreshTokenRequest({ token });
+  localStorage.setItem('refreshToken', refreshToken);
+  localStorage.setItem('accessToken', accessToken);
 
   res = await fetch(API_URL + url, withAuthHeader(opts));
 

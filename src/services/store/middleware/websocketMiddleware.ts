@@ -45,8 +45,9 @@ export const websocketMiddleware = <S, R>(
 
     if (connect.match(action)) {
       url = action.payload;
+      const accessToken = localStorage.getItem('accessToken') || '';
       if (withAuth) {
-        const urlWithToken = `${url}?token=${getState().auth.accessToken.replace(
+        const urlWithToken = `${url}?token=${accessToken.replace(
           'Bearer ',
           ''
         )}`;

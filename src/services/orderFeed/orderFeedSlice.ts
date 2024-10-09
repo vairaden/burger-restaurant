@@ -16,16 +16,16 @@ interface InitialState {
   loading: boolean;
 }
 
-const initialState: InitialState = {
+export const orderFeedInitialState: InitialState = {
   wsConnected: false,
   data: null,
-  loading: true,
+  loading: false,
   error: null,
 };
 
 export const orderFeedSlice = createSlice({
   name: 'orderFeed',
-  initialState,
+  initialState: orderFeedInitialState,
   reducers: {
     wsConnectionStart: (state) => {
       state.error = null;
@@ -56,5 +56,3 @@ export const orderFeedSlice = createSlice({
     wsSendMessage: () => {},
   },
 });
-
-export default orderFeedSlice;

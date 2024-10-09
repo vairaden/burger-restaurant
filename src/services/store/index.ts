@@ -1,15 +1,15 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { useDispatch, useSelector } from 'react-redux';
-import ingredientsSlice from '../ingredients/ingredientsSlice';
-import ordersSlice from '../orders/ordersSlice';
-import authSlice, { refreshAccessToken } from '../auth/authSlice';
-import passwordSlice from '../password/passwordSlice';
-import orderFeedSlice from '../orderFeed/orderFeedSlice';
 import { websocketMiddleware } from './middleware/websocketMiddleware';
-import burgerConstructorSlice from '../burgerConstructior/burgerConstructorSlice';
-import orderHistorySlice from '../orderHistory/orderHistorySlice';
 import orderHistoryActions from '../orderHistory/orderHistoryActions';
 import orderFeedActions from '../orderFeed/orderFeedActions';
+import { ingredientsSlice } from '../ingredients/ingredientsSlice';
+import { ordersSlice } from '../orders/ordersSlice';
+import { authSlice, refreshAccessToken } from '../auth/authSlice';
+import { passwordSlice } from '../password/passwordSlice';
+import { orderFeedSlice } from '../orderFeed/orderFeedSlice';
+import { orderHistorySlice } from '../orderHistory/orderHistorySlice';
+import { burgerConstructorSlice } from '../burgerConstructor/burgerConstructorSlice';
 
 const rootReducer = combineSlices(
   ingredientsSlice,

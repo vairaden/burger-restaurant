@@ -24,7 +24,7 @@ export interface PasswordState {
   error: boolean;
 }
 
-const initialState: PasswordState = {
+export const passwordInitialState: PasswordState = {
   emailCodeSent: false,
   loading: false,
   error: false,
@@ -32,7 +32,7 @@ const initialState: PasswordState = {
 
 export const passwordSlice = createSlice({
   name: 'password',
-  initialState,
+  initialState: passwordInitialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -45,12 +45,11 @@ export const passwordSlice = createSlice({
       })
       .addCase(resetPassword.rejected, (state) => {
         state.loading = false;
+        state.error = true;
       })
       .addCase(sendResetEmail.pending, (state) => {
         state.error = false;
-
         state.emailCodeSent = true;
-
         state.loading = true;
       })
       .addCase(sendResetEmail.fulfilled, (state) => {
@@ -58,8 +57,7 @@ export const passwordSlice = createSlice({
       })
       .addCase(sendResetEmail.rejected, (state) => {
         state.loading = false;
+        state.error = true;
       });
   },
 });
-
-export default passwordSlice;

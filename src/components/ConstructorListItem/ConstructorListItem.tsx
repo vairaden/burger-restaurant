@@ -11,7 +11,7 @@ import { useAppDispatch } from '../../services/store';
 import {
   moveIngredient,
   moveIngredientToBottom,
-} from '../../services/burgerConstructior/burgerConstructorSlice';
+} from '../../services/burgerConstructor/burgerConstructorSlice';
 
 interface Props {
   item: Ingredient;
@@ -92,6 +92,7 @@ const ConstructorListItem = ({
             return;
         }
       }}
+      data-test-ingredient-id={item._id}
       className={clsx(styles.listItemContent, {
         'mt-4': type !== 'top',
         [styles.listItemHovered]: isHover,

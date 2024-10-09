@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import {
   addIngredient,
   deleteIngredient,
-} from '../../services/burgerConstructior/burgerConstructorSlice';
+} from '../../services/burgerConstructor/burgerConstructorSlice';
 import { ConstructorIngredient, Ingredient } from '../../types';
 import {
   decreaseIngredientNumber,
@@ -124,6 +124,7 @@ export const BurgerConstructor = () => {
             [styles.ingredientListHovered]: isHover,
           })}
           ref={dropRef}
+          data-test-id="constructor-area"
         >
           {bun && <ConstructorListItem locked item={bun} type="top" />}
 
@@ -145,7 +146,8 @@ export const BurgerConstructor = () => {
             <CurrencyIcon type="primary" />
           </div>
           <Button
-            htmlType="button"
+          data-test-id="create-order-button"
+          htmlType="button"
             type="primary"
             size="medium"
             onClick={onCreateOrder}
